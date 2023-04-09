@@ -11,7 +11,7 @@ void main() {
     statusBarColor: Colors.transparent,
     statusBarIconBrightness: Brightness.dark,
   ));
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 List names = [
@@ -27,7 +27,11 @@ List names = [
 String usr_name = 'Aditya';
 
 class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+  int? f;
+  MyApp({int flag = 0, super.key}) {
+    //for changing state if flag = 0 means keys are not created
+    f = flag; //if flag is passed as 1 by another page then it shows keys are generated and walled is created successfully.
+  }
 
   @override
   State<MyApp> createState() => MyAppState();
@@ -37,7 +41,7 @@ class MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'cryptoX',
+      title: 'Cryptox',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -59,41 +63,8 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    double h = MediaQuery.of(context).size.height;
+    //double h = MediaQuery.of(context).size.height;
     return Scaffold(
-        //appBar: AppBar(
-        // toolbarHeight: 150,
-        // backgroundColor: Color.fromARGB(255, 24, 24, 24),
-        // backgroundColor: const Color.fromRGBO(250, 250, 250, 1),
-        // title: Center(
-        //   child: Row(
-        //     // mainAxisAlignment: MainAxisAlignment.spaceAround,
-        //     children: [
-        //       const SizedBox(
-        //         // height: 60,
-        //         // width: 60,
-        //         child: CircleAvatar(
-        //           // backgroundColor: Color.fromARGB(100, 0, 90, 100),
-        //           backgroundColor: Colors.transparent,
-        //           backgroundImage:
-        //               AssetImage('assets/images/user_icon_2.png'),
-        //           radius: 30,
-        //         ),
-        //       ),
-        //       Container(
-        //         margin: const EdgeInsets.only(left: 15),
-        //         child: Text(widget.title,
-        //             style: const TextStyle(
-        //                 fontSize: 50,
-        //                 fontFamily: 'Lobster',
-        //                 // color: Color.fromARGB(255, 71, 217, 204),
-        //                 color: Colors.black,
-        //                 fontWeight: FontWeight.w500)),
-        //       ),
-        //     ],
-        //   ),
-        //),
-        //),
         appBar: AppBar(
           toolbarHeight: 80,
           foregroundColor: Colors.black,
