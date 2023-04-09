@@ -1,7 +1,6 @@
 import 'package:cryptoX/LoginPage.dart';
 import 'package:cryptoX/WalletCreation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:cryptoX/Scan2Pay.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -10,8 +9,9 @@ void main() {
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,
     statusBarIconBrightness: Brightness.dark,
+    statusBarBrightness: Brightness.light,
   ));
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 List names = [
@@ -27,11 +27,7 @@ List names = [
 String usr_name = 'Aditya';
 
 class MyApp extends StatefulWidget {
-  int? f;
-  MyApp({int flag = 0, super.key}) {
-    //for changing state if flag = 0 means keys are not created
-    f = flag; //if flag is passed as 1 by another page then it shows keys are generated and walled is created successfully.
-  }
+  const MyApp({super.key});
 
   @override
   State<MyApp> createState() => MyAppState();
@@ -52,7 +48,11 @@ class MyAppState extends State<MyApp> {
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+  int? f;
+  MyHomePage({int flag = 0, super.key, required this.title}) {
+    //for changing state if flag = 0 means keys are not created
+    f = flag; //if flag is passed as 1 by another page then it shows keys are generated and walled is created successfully.
+  }
 
   final String title;
 
@@ -189,97 +189,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 // color: const Color(0xfff3f3f3),
                 child: Column(
                   // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Balance(),
-                    //--------------------------SCANNER----------------------------------->
-                    // Container(
-                    //   margin: const EdgeInsets.all(20),
-                    //   child: Row(
-                    //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    //     children: [
-                    //       InkWell(
-                    //         onTap: () {
-                    //           Navigator.of(context).push(MaterialPageRoute(
-                    //             builder: (context) => const Scan2Pay(),
-                    //           ));
-                    //         },
-                    //         child: Column(
-                    //           children: [
-                    //             Container(
-                    //               height: 150,
-                    //               width: 150,
-                    //               margin: const EdgeInsets.only(
-                    //                   top: 15, bottom: 15),
-                    //               decoration: BoxDecoration(
-                    //                   borderRadius: BorderRadius.circular(15),
-                    //                   image: const DecorationImage(
-                    //                       image: AssetImage(
-                    //                           'assets/images/QR_scan.png')),
-                    //                   boxShadow: const [
-                    //                     BoxShadow(
-                    //                       blurRadius: 30,
-                    //                       spreadRadius: 0,
-                    //                       color: Color(0xb8aee1f1),
-                    //                     )
-                    //                   ]),
-                    //
-                    //               // child: Image.asset('assets/images/QR_scan.png')
-                    //             ),
-                    //             const Text(
-                    //               'Scan to Pay',
-                    //               style: TextStyle(
-                    //                   fontSize: 15,
-                    //                   color: Colors.red,
-                    //                   fontFamily: 'Poppins',
-                    //                   // backgroundColor: Colors.yellow,
-                    //                   fontWeight: FontWeight.w400),
-                    //             ),
-                    //           ],
-                    //         ),
-                    //       ),
-                    //       // InkWell(
-                    //       //   onTap: () {
-                    //       //     ScaffoldMessenger.of(context)
-                    //       //         .showSnackBar(const SnackBar(
-                    //       //       content: Text("Receive Money Tapped! "),
-                    //       //     ));
-                    //       //   },
-                    //       //   child: Column(
-                    //       //     children: [
-                    //       //       Container(
-                    //       //         margin: const EdgeInsets.only(bottom: 15),
-                    //       //         height: 150,
-                    //       //         width: 125,
-                    //       //         decoration: BoxDecoration(
-                    //       //             borderRadius: BorderRadius.circular(15),
-                    //       //             image: const DecorationImage(
-                    //       //                 image: AssetImage(
-                    //       //                     'assets/images/receive-money.png')),
-                    //       //             boxShadow: const [
-                    //       //               BoxShadow(
-                    //       //                 blurRadius: 30,
-                    //       //                 spreadRadius: 0,
-                    //       //                 color: Color.fromRGBO(255, 172, 0, 0.1),
-                    //       //               )
-                    //       //             ]),
-                    //       //
-                    //       //         // child: Image.asset('assets/images/QR_scan.png')
-                    //       //       ),
-                    //       //       const Text(
-                    //       //         'Recieve',
-                    //       //         style: TextStyle(
-                    //       //             fontFamily: 'Poppins',
-                    //       //             fontSize: 15,
-                    //       //             color: Colors.red,
-                    //       //             // backgroundColor: Colors.yellow,
-                    //       //             fontWeight: FontWeight.w400),
-                    //       //       ),
-                    //       //     ],
-                    //       //   ),
-                    //       // ),
-                    //     ],
-                    //   ),
-                    // ),
+                    Balance(widget.f!),
                     Container(
                       width: double.infinity,
                       margin: const EdgeInsets.only(bottom: 20, left: 25),
@@ -362,7 +274,11 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 class Balance extends StatelessWidget {
-  const Balance({super.key});
+  int? fl;
+  Balance(int f, {super.key}) {
+    fl = f;
+    print('FLAG-------------->$f');
+  }
 
   @override
   build(context) {
@@ -378,67 +294,112 @@ class Balance extends StatelessWidget {
         margin: const EdgeInsets.only(top: 15, bottom: 25),
         height: 180,
         width: 350,
-        child: Card(
-          shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(15)),
-              side: BorderSide(width: 0, color: Color(0xff9aceea)
-                  // color: Color(0xffffffff),
-                  )),
-          elevation: 0,
-          // color: Colors.white,
-          color: const Color(0xffd8edf5),
-          // shadowColor: const Color.fromRGBO(255, 172, 0, 0.25),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
-                'Available Balance',
-                style: TextStyle(
-                  fontFamily: 'Poppins',
-                  fontWeight: FontWeight.w400,
-                  fontSize: 20,
-                  // color: Color(0xff0f87a2),
-                ),
-              ),
-              const Text(
-                '₹ 10,000',
-                style: TextStyle(
-                    fontFamily: 'Poppins',
-                    fontSize: 35,
-                    fontWeight: FontWeight.w700,
-                    // color: Color.fromRGBO(248, 98, 66, 1.0),
-                    color: Colors.blue),
-              ),
-              const Text(
-                'Wallet (ETH)',
-                style: TextStyle(
-                  fontFamily: 'Poppins',
-                  fontWeight: FontWeight.w500,
-                  fontSize: 14,
-                  // color: Color(0xff000000),
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    height: 25,
-                    child: Image.asset('assets/images/ethereum.png'),
-                  ),
-                  const Text(
-                    '100',
-                    style: TextStyle(
-                      fontFamily: 'poppins',
-                      fontWeight: FontWeight.w600,
-                      fontSize: 20,
-                      // color: Colors.orangeAccent,
+        child: (fl != 0)
+            ? Card(
+                shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(15)),
+                    side: BorderSide(width: 0, color: Color(0xff9aceea)
+                        // color: Color(0xffffffff),
+                        )),
+                elevation: 0,
+                // color: Colors.white,
+                color: const Color(0xffd8edf5),
+                // shadowColor: const Color.fromRGBO(255, 172, 0, 0.25),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'Available Balance',
+                      style: TextStyle(
+                        fontFamily: 'Poppins',
+                        fontWeight: FontWeight.w400,
+                        fontSize: 20,
+                        // color: Color(0xff0f87a2),
+                      ),
                     ),
-                  ),
-                ],
+                    const Text(
+                      '₹ 10,000',
+                      style: TextStyle(
+                          fontFamily: 'Poppins',
+                          fontSize: 35,
+                          fontWeight: FontWeight.w700,
+                          // color: Color.fromRGBO(248, 98, 66, 1.0),
+                          color: Colors.blue),
+                    ),
+                    const Text(
+                      'Wallet (ETH)',
+                      style: TextStyle(
+                        fontFamily: 'Poppins',
+                        fontWeight: FontWeight.w500,
+                        fontSize: 14,
+                        // color: Color(0xff000000),
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          height: 25,
+                          child: Image.asset('assets/images/ethereum.png'),
+                        ),
+                        const Text(
+                          '100',
+                          style: TextStyle(
+                            fontFamily: 'poppins',
+                            fontWeight: FontWeight.w600,
+                            fontSize: 20,
+                            // color: Colors.orangeAccent,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              )
+            : Card(
+                shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(15)),
+                    side: BorderSide(width: 0, color: Color(0xff9aceea)
+                        // color: Color(0xffffffff),
+                        )),
+                elevation: 0,
+                // color: Colors.white,
+                color: const Color(0xffd8edf5),
+                // shadowColor: const Color.fromRGBO(255, 172, 0, 0.25),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Padding(
+                      padding: EdgeInsets.all(10.0),
+                      child: Text(
+                        'No wallet found!',
+                        style: TextStyle(
+                          fontFamily: 'Poppins',
+                          fontWeight: FontWeight.w500,
+                          fontSize: 14,
+                          color: Color(0xffd74444),
+                        ),
+                      ),
+                    ),
+                    Text(
+                      'Tap to create a wallet',
+                      style: TextStyle(
+                          fontFamily: 'Poppins',
+                          fontWeight: FontWeight.w600,
+                          fontSize: 20,
+                          color: Color(0xff699bcb)
+                          // color: Color(0xff0f87a2),
+                          ),
+                    ),
+                    SizedBox(
+                      height: 50,
+                      width: 50,
+                      child: Icon(Icons.add_circle_outline_rounded,
+                          color: Color(0xff699bcb)),
+                    ),
+                  ],
+                ),
               ),
-            ],
-          ),
-        ),
       ),
     );
   }

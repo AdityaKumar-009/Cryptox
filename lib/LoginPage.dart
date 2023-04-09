@@ -79,7 +79,7 @@ class LoginPage extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                           builder: (context) =>
-                              const MyHomePage(title: 'Hi, Aditya')));
+                              MyHomePage(title: 'Hi, Aditya')));
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
