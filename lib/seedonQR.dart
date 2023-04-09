@@ -65,16 +65,39 @@ class SeedonQR extends StatelessWidget {
                     margin: const EdgeInsets.only(top: 50),
                     child: Padding(
                       padding: const EdgeInsets.all(10.0),
-                      child: QrImage(
-                        data: seedPhrase!,
-                        version: QrVersions.auto,
-                        size: 320,
-                        gapless: false,
-                        embeddedImage:
-                            const AssetImage('assets/images/ethereum-logo.png'),
-                        embeddedImageStyle: QrEmbeddedImageStyle(
-                          size: const Size(80, 80),
-                        ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          QrImage(
+                            data: seedPhrase!,
+                            version: QrVersions.auto,
+                            size: 320,
+                            gapless: false,
+                            embeddedImage: const AssetImage(
+                                'assets/images/ethereum-logo.png'),
+                            embeddedImageStyle: QrEmbeddedImageStyle(
+                              size: const Size(80, 80),
+                            ),
+                          ),
+                          RichText(
+                            text: const TextSpan(
+                                text: '',
+                                style: TextStyle(
+                                  color: Color(0xff1f1f1f),
+                                  fontSize: 30,
+                                  fontFamily: 'Alpha',
+                                  fontWeight: FontWeight.w700,
+                                ),
+                                children: [
+                                  TextSpan(
+                                      text: 'CRYPTOX',
+                                      style: TextStyle(
+                                        color: Colors.blue,
+                                        fontWeight: FontWeight.w700,
+                                      ))
+                                ]),
+                          ),
+                        ],
                       ),
                     ),
                   ),

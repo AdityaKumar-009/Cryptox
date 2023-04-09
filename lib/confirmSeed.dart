@@ -1,13 +1,14 @@
 import 'package:cryptoX/KeyGeneration.dart';
 import 'package:cryptoX/Scan2Pay.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ConfirmSeed extends StatefulWidget {
-  String? words;
+  String words = '';
   List t12words = [];
-  ConfirmSeed(String wordPhrases, List twelve_words, {super.key}) {
+  int flag = 0;
+  ConfirmSeed(String wordPhrases, List twelve_words, {int f = 0, super.key}) {
+    flag = f;
     words = wordPhrases;
     print(words);
     t12words = twelve_words;
@@ -22,16 +23,21 @@ class _ConfirmSeedState extends State<ConfirmSeed> {
   List<int> cndtn = [];
   int count = 0;
   List<TextEditingController> input = [];
-
   @override
   void initState() {
     for (int i = 0; i < 12; i++) {
       input.add(TextEditingController());
     }
-    super.initState();
+    if (widget.flag == 1) {
+      for (int i = 0; i < 12; i++) {
+        input[i].text = widget.t12words[i];
+      }
+    }
     for (int i = 0; i < 12; i++) {
       cndtn.add(0);
     }
+
+    super.initState();
   }
 
   @override
@@ -161,6 +167,9 @@ class _ConfirmSeedState extends State<ConfirmSeed> {
                                 itemCount: widget.t12words.length,
                                 itemBuilder: (context, index) {
                                   //index will iterate from 0 to 11
+                                  // if (widget.flag == 1) {
+                                  //   input[index].text = widget.words!;
+                                  // }
                                   return Container(
                                     child: (cndtn[index] ==
                                             1) //if cndtn which has previously contained 0 as an element

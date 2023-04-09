@@ -1,4 +1,4 @@
-import 'package:cryptoX/main.dart';
+import 'package:cryptoX/MyDashBoardPage.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -22,28 +22,50 @@ class LoginPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           // crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            RichText(
-              text: const TextSpan(
-                  text: 'Welcome to ',
+            const Padding(
+              padding: EdgeInsets.all(10),
+              child: Text('Welcome to ',
                   style: TextStyle(
                     color: Color(0xff1f1f1f),
-                    fontSize: 30,
-                    fontFamily: 'Poppins',
-                    fontWeight: FontWeight.w600,
-                  ),
-                  children: [
-                    TextSpan(
-                        text: 'cryptoX',
-                        style: TextStyle(
-                          color: Colors.blue,
-                          fontWeight: FontWeight.w700,
-                        ))
-                  ]),
+                    fontSize: 25,
+                    fontFamily: 'Alpha',
+                    fontWeight: FontWeight.w900,
+                  )),
             ),
+            const Padding(
+              padding: EdgeInsets.all(10.0),
+              child: Text('CRYPTOX',
+                  style: TextStyle(
+                    color: Colors.blue,
+                    fontSize: 65,
+                    fontFamily: 'Alpha',
+                    fontWeight: FontWeight.w900,
+                  )),
+            ),
+            // RichText(
+            //   text: const TextSpan(
+            //       // text: 'Welcome to ',
+            //       style: TextStyle(
+            //         color: Color(0xff1f1f1f),
+            //         fontSize: 25,
+            //         fontFamily: 'Alpha',
+            //         fontWeight: FontWeight.w900,
+            //       ),
+            //       children: [
+            //         TextSpan(
+            //             text: 'CRYPTOX',
+            //             style: TextStyle(
+            //               color: Colors.blue,
+            //               fontSize: 55,
+            //               fontFamily: 'Alpha',
+            //               fontWeight: FontWeight.w900,
+            //             ))
+            //       ]),
+            // ),
             SizedBox(
               width: 250,
               child: Text(
-                'A wallet app powered by Blockchain Technology.',
+                'A decentralized wallet app powered by Blockchain Technology.',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 12,

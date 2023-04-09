@@ -90,19 +90,19 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-   - family: Alkatra
+   - family: Alpha
      fonts:
-       - asset: assets/fonts/Alkatra-VariableFont_wght.ttf
+       - asset: assets/fonts/Alphacentauri-MVY4p.ttf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
-   - family: Baloo
+   - family: Ava
      fonts:
-       - asset: assets/fonts/BalooThambi2-VariableFont_wght.ttf
+       - asset: assets/fonts/Ava-EaRRg.ttf
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
-   - family: Lobster
+   - family: Pro
      fonts:
-       - asset: assets/fonts/LobsterTwo-Regular.ttf
+       - asset: assets/fonts/ProcrastinatingPixie-WyVOO.ttf
      #       - asset: fonts/Schyler-Italic.ttf
      #         style: italic
    - family: Nunito
@@ -110,9 +110,9 @@ flutter:
        - asset: assets/fonts/Nunito-VariableFont_wght.ttf
      #       - asset: fonts/Schyler-Italic.ttf
      #         style: italic
-   - family: Orbitron
+   - family: Rev
      fonts:
-       - asset: assets/fonts/Orbitron-VariableFont_wght.ttf
+       - asset: assets/fonts/Revamped-X3q1a.ttf
        #       - asset: fonts/Schyler-Italic.ttf
        #         style: italic
    - family: Poppins

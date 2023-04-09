@@ -37,14 +37,18 @@ class _WalletCreationState extends State<WalletCreation> {
     generatedWords = mnemonic;
 
     print(generatedWords);
+    print(generatedWords.length);
 
     for (int i = 0; i < generatedWords.length; i++) {
-      if (generatedWords[i] == ' ' || i == generatedWords.length - 1) {
+      if (generatedWords[i] == ' ') {
         // print('${word}: ${word.length}');
         twelve_words.add(word);
         word = '';
       } else {
         word += generatedWords[i];
+      }
+      if (i == generatedWords.length - 1) {
+        twelve_words.add(word);
       }
     }
     print(twelve_words);

@@ -13,6 +13,7 @@ class Scan2Pay extends StatefulWidget {
   }
   String? words;
   List tw = [];
+  String one_word = '';
   @override
   State<StatefulWidget> createState() => _Scan2PayState();
 }
@@ -36,6 +37,17 @@ class _Scan2PayState extends State<Scan2Pay> {
 
   @override
   Widget build(BuildContext context) {
+    OpenPage() async {
+      // Navigator.pushReplacement(
+      //     context,
+      //     MaterialPageRoute(
+      //         builder: (context) => ConfirmSeed(widget.words!, widget.tw)));
+      setState(() {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(widget.tw.toString())));
+      });
+    }
+
     // SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     //   statusBarIconBrightness: Brightness.light,
     // ));
@@ -47,22 +59,33 @@ class _Scan2PayState extends State<Scan2Pay> {
     } else {
       h = MediaQuery.of(context).size.height;
     }
-    print(widget.page);
+
+    //
+    //
+    // print(widget.page);
     if (result != null && widget.page == 2) {
+      print("LENGTH--------------->${result!.code!.length}");
       widget.words = result!.code;
-      for (int i = 0; i < widget.words!.length; i++) {
-        if (widget.words![i] == ' ' || i == widget.words!.length - 1) {
-          // print('${word}: ${word.length}');
-          widget.tw.add(widget.words!);
-          widget.words = '';
-        } else {
-          widget.words = widget.words! + widget.words![i];
+      if (widget.tw.length != 12) {
+        for (int i = 0; i < widget.words!.length; i++) {
+          if (widget.words![i] == ' ') {
+            widget.tw.add(widget.one_word);
+            widget.one_word = '';
+          } else {
+            widget.one_word += widget.words![i];
+          }
+          if (i == widget.words!.length - 1) {
+            widget.tw.add(widget.one_word);
+          }
         }
       }
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => ConfirmSeed(widget.words!, widget.tw)));
+
+      print('WORDS: ${widget.words}\n LIST_OF_WORDS: ${widget.tw}');
+      OpenPage();
+      // setState(() {
+      //   ScaffoldMessenger.of(context)
+      //       .showSnackBar(SnackBar(content: Text(widget.tw.toString())));
+      // });
     }
     return Scaffold(
       body: SizedBox(
