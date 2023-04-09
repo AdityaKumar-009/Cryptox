@@ -109,7 +109,7 @@ class _ConfirmSeedState extends State<ConfirmSeed> {
                                   style: TextStyle(
                                       // decoration: TextDecoration.underline,
                                       fontSize: 15,
-                                      color: Colors.green),
+                                      color: Colors.redAccent),
                                 ),
                                 TextSpan(
                                   text: ' earlier.',
@@ -253,7 +253,7 @@ class _ConfirmSeedState extends State<ConfirmSeed> {
                             fontWeight: FontWeight.w600)),
                   ),
                   Container(
-                    margin: const EdgeInsets.only(top: 153),
+                    margin: const EdgeInsets.only(top: 168),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -291,15 +291,6 @@ class _ConfirmSeedState extends State<ConfirmSeed> {
                                     MaterialPageRoute(
                                         builder: (context) =>
                                             Scan2Pay(thisPage)));
-                                // setState(() {
-                                //   selected = 1;
-                                // });
-
-                                //final privateKey = await service.getPrivateKey(mnemonic);
-                                //final publicKey = await service.getPublicKey(privateKey);
-                                //privAddress = privateKey;
-                                //pubAddress = publicKey.toString();
-                                //addUserDetails(privateKey, publicKey);
                               },
                             )),
                         SizedBox(
@@ -363,21 +354,6 @@ class _ConfirmSeedState extends State<ConfirmSeed> {
                                   Icon(FontAwesomeIcons.key),
                                 ],
                               ),
-                              //onPressed: () async {
-
-                              // setState(() {
-                              //   selected = 1;
-                              // });
-
-                              // final privateKey = await service
-                              //     .getPrivateKey(generatedWords);
-                              // final publicKey = await service
-                              //     .getPublicKey(privateKey);
-                              // privAddress = privateKey;
-                              // pubAddress = publicKey.toString();
-
-                              //addUserDetails(privateKey, publicKey);
-                              // },
                             )),
                       ],
                     ),

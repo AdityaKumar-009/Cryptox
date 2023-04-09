@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
+import 'package:cryptoX/confirmSeed.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:flutter/material.dart';
@@ -10,7 +11,8 @@ class Scan2Pay extends StatefulWidget {
   Scan2Pay(int p, {super.key}) {
     page = p;
   }
-
+  String? words;
+  List tw = [];
   @override
   State<StatefulWidget> createState() => _Scan2PayState();
 }
@@ -39,12 +41,29 @@ class _Scan2PayState extends State<Scan2Pay> {
     // ));
     double w = MediaQuery.of(context).size.width;
     double? h;
+
     if (widget.page == 1) {
       h = MediaQuery.of(context).size.height - 100;
     } else {
       h = MediaQuery.of(context).size.height;
     }
     print(widget.page);
+    if (result != null && widget.page == 2) {
+      widget.words = result!.code;
+      for (int i = 0; i < widget.words!.length; i++) {
+        if (widget.words![i] == ' ' || i == widget.words!.length - 1) {
+          // print('${word}: ${word.length}');
+          widget.tw.add(widget.words!);
+          widget.words = '';
+        } else {
+          widget.words = widget.words! + widget.words![i];
+        }
+      }
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ConfirmSeed(widget.words!, widget.tw)));
+    }
     return Scaffold(
       body: SizedBox(
         height: double.infinity,

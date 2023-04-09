@@ -137,7 +137,7 @@ class _WalletCreationState extends State<WalletCreation> {
                                   style: TextStyle(
                                       // decoration: TextDecoration.underline,
                                       fontSize: 15,
-                                      color: Color(0xff3c8dff)),
+                                      color: Colors.red),
                                 ),
                                 TextSpan(
                                   text:
@@ -151,7 +151,7 @@ class _WalletCreationState extends State<WalletCreation> {
                     ],
                   ),
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(25, 0, 25, 20),
+                    padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
                     child: Column(
                       children: const [
                         Padding(
@@ -165,7 +165,7 @@ class _WalletCreationState extends State<WalletCreation> {
                           ),
                         ),
                         Text(
-                          '👉 In order to do that you have two ways, first way is manually writing the words written below in a paper (or a metal sheet etc.) and put it on a safe deposit box.\n\n👉 Second way is, we provide an option to generate the QR of these words then you can print it on the paper and safe it somewhere which simplify the process of writing it down on the paper or the app.\n',
+                          'Two ways to remember these words:\n\n👉 Write these words in a paper (or a metal sheet etc.) and put it on a safe deposit box.\n\n👉 Generate QR of these words then you can print it on the paper and put it safe.\n',
                           textAlign: TextAlign.justify,
                           style: TextStyle(
                               fontSize: 12,
@@ -176,6 +176,7 @@ class _WalletCreationState extends State<WalletCreation> {
                       ],
                     ),
                   ),
+                  const Divider(),
                   Padding(
                     padding: const EdgeInsets.only(left: 18, right: 18),
                     child: Container(
@@ -188,7 +189,8 @@ class _WalletCreationState extends State<WalletCreation> {
                       //       width: .5,
                       //     )),
                       // margin: const EdgeInsets.fromLTRB(0, 0, 0, 10),
-                      child: SizedBox(
+                      child: Container(
+                        margin: const EdgeInsets.only(top: 20, bottom: 10),
                         height: 267,
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -229,8 +231,9 @@ class _WalletCreationState extends State<WalletCreation> {
                       ),
                     ),
                   ),
+                  const Divider(),
                   Container(
-                    margin: const EdgeInsets.fromLTRB(20, 25, 20, 25),
+                    margin: const EdgeInsets.fromLTRB(20, 5, 20, 20),
                     child: const Text(
                         'NOTE: Everytime you open this page new words are generated so further proceed accordingly. ',
                         textAlign: TextAlign.justify,
@@ -278,15 +281,6 @@ class _WalletCreationState extends State<WalletCreation> {
                                     MaterialPageRoute(
                                         builder: (context) =>
                                             SeedonQR(generatedWords)));
-                                // setState(() {
-                                //   selected = 1;
-                                // });
-
-                                //final privateKey = await service.getPrivateKey(mnemonic);
-                                //final publicKey = await service.getPublicKey(privateKey);
-                                //privAddress = privateKey;
-                                //pubAddress = publicKey.toString();
-                                //addUserDetails(privateKey, publicKey);
                               },
                             )),
                         SizedBox(

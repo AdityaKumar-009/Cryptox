@@ -56,7 +56,7 @@ class SeedonQR extends StatelessWidget {
                   Container(
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
                       border: Border.all(
                         width: .5,
                         color: Colors.grey.shade300,
