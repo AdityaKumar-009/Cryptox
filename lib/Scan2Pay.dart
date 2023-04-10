@@ -23,6 +23,12 @@ class _Scan2PayState extends State<Scan2Pay> {
   QRViewController? controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
 
+  @override
+  void dispose() {
+    controller?.dispose();
+    super.dispose();
+  }
+
   // In order to get hot reload to work we need to pause the camera if the platform
   // is android, or resume the camera if the platform is iOS.
   @override
@@ -37,17 +43,6 @@ class _Scan2PayState extends State<Scan2Pay> {
 
   @override
   Widget build(BuildContext context) {
-    OpenPage() async {
-      // Navigator.pushReplacement(
-      //     context,
-      //     MaterialPageRoute(
-      //         builder: (context) => ConfirmSeed(widget.words!, widget.tw)));
-      setState(() {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(widget.tw.toString())));
-      });
-    }
-
     // SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     //   statusBarIconBrightness: Brightness.light,
     // ));
@@ -63,30 +58,6 @@ class _Scan2PayState extends State<Scan2Pay> {
     //
     //
     // print(widget.page);
-    if (result != null && widget.page == 2) {
-      print("LENGTH--------------->${result!.code!.length}");
-      widget.words = result!.code;
-      if (widget.tw.length != 12) {
-        for (int i = 0; i < widget.words!.length; i++) {
-          if (widget.words![i] == ' ') {
-            widget.tw.add(widget.one_word);
-            widget.one_word = '';
-          } else {
-            widget.one_word += widget.words![i];
-          }
-          if (i == widget.words!.length - 1) {
-            widget.tw.add(widget.one_word);
-          }
-        }
-      }
-
-      print('WORDS: ${widget.words}\n LIST_OF_WORDS: ${widget.tw}');
-      OpenPage();
-      // setState(() {
-      //   ScaffoldMessenger.of(context)
-      //       .showSnackBar(SnackBar(content: Text(widget.tw.toString())));
-      // });
-    }
     return Scaffold(
       body: SizedBox(
         height: double.infinity,
@@ -300,13 +271,46 @@ class _Scan2PayState extends State<Scan2Pay> {
     );
   }
 
-  void _onQRViewCreated(QRViewController controller) {
+  void _onQRViewCreated(QRViewController controller) async {
     setState(() {
       this.controller = controller;
     });
+
     controller.scannedDataStream.listen((scanData) {
       setState(() {
         result = scanData;
+
+        if (result!.code != null && widget.page == 2) {
+          print("LENGTH--------------->${result!.code!.length}");
+          widget.words = result!.code;
+          if (widget.tw.length != 12) {
+            for (int i = 0; i < widget.words!.length; i++) {
+              if (widget.words![i] == ' ') {
+                widget.tw.add(widget.one_word);
+                widget.one_word = '';
+              } else {
+                widget.one_word += widget.words![i];
+              }
+              if (i == widget.words!.length - 1) {
+                widget.tw.add(widget.one_word);
+              }
+            }
+          }
+
+          if (true) {
+            controller.pauseCamera();
+            Navigator.pop(context, widget.tw);
+            // .then((_) {
+            // controller.resumeCamera();
+            // });
+          }
+
+          print('WORDS: ${widget.words}\n LIST_OF_WORDS: ${widget.tw}');
+          // setState(() {
+          //   ScaffoldMessenger.of(context)
+          //       .showSnackBar(SnackBar(content: Text(widget.tw.toString())));
+          // });
+        }
       });
     });
   }
@@ -318,11 +322,5 @@ class _Scan2PayState extends State<Scan2Pay> {
         const SnackBar(content: Text('No Camera Permission!')),
       );
     }
-  }
-
-  @override
-  void dispose() {
-    controller?.dispose();
-    super.dispose();
   }
 }

@@ -330,7 +330,8 @@ class _WalletCreationState extends State<WalletCreation> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => ConfirmSeed(
-                                            generatedWords, twelve_words)));
+                                            wordPhrases: generatedWords,
+                                            twlv_words: twelve_words)));
                               },
                             )),
                       ],

@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:cryptoX/KeyGeneration.dart';
 import 'package:cryptoX/Scan2Pay.dart';
 import 'package:flutter/material.dart';
@@ -5,14 +6,25 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ConfirmSeed extends StatefulWidget {
   String words = '';
+  String qr_wrds = '';
   List t12words = [];
+  List qr_t12words = [];
   int flag = 0;
-  ConfirmSeed(String wordPhrases, List twelve_words, {int f = 0, super.key}) {
+  ConfirmSeed(
+      {String wrds_qr = '',
+      String wordPhrases = '',
+      List twlv_words = const [],
+      List twlv_wrds_qr = const [],
+      int f = 0,
+      super.key}) {
     flag = f;
+    qr_wrds = wrds_qr;
     words = wordPhrases;
-    print(words);
-    t12words = twelve_words;
-    print(t12words);
+    // print(words);
+    qr_t12words = twlv_wrds_qr;
+    print('QR_WORDS: ${qr_t12words}');
+    t12words = twlv_words;
+    print('PREVIOUS PAGE_WORDS: ${t12words}');
   }
 
   @override
@@ -28,11 +40,7 @@ class _ConfirmSeedState extends State<ConfirmSeed> {
     for (int i = 0; i < 12; i++) {
       input.add(TextEditingController());
     }
-    if (widget.flag == 1) {
-      for (int i = 0; i < 12; i++) {
-        input[i].text = widget.t12words[i];
-      }
-    }
+
     for (int i = 0; i < 12; i++) {
       cndtn.add(0);
     }
@@ -171,8 +179,11 @@ class _ConfirmSeedState extends State<ConfirmSeed> {
                                   //   input[index].text = widget.words!;
                                   // }
                                   return Container(
-                                    child: (cndtn[index] ==
-                                            1) //if cndtn which has previously contained 0 as an element
+                                    child: (cndtn[index] == 1 ||
+                                            (widget.flag == 1 &&
+                                                widget.qr_t12words[index] ==
+                                                    widget.t12words[
+                                                        index])) //if cndtn which has previously contained 0 as an element
                                         //by calling the setState() cndtn at that index becomes 1
                                         ? Container(
                                             decoration: BoxDecoration(
@@ -200,7 +211,8 @@ class _ConfirmSeedState extends State<ConfirmSeed> {
                                             onChanged: (txt) {
                                               if (txt ==
                                                   widget.t12words[index]) {
-                                                input[index].text = txt;
+                                                // input[index].text = txt;
+
                                                 //if [entered text] equals [12 Worded List at that index] are same
                                                 print(
                                                     'At index ${index} Condition is true!');
@@ -294,12 +306,28 @@ class _ConfirmSeedState extends State<ConfirmSeed> {
                                 ],
                               ),
                               onPressed: () async {
-                                int thisPage = 2;
-                                Navigator.push(
+                                final res = await Navigator.push<List>(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) =>
-                                            Scan2Pay(thisPage)));
+                                        builder: (context) => Scan2Pay(2)));
+                                setState(() {
+                                  widget.flag = 1;
+                                  widget.qr_t12words = res!;
+                                  for (int i = 0; i < 12; i++) {
+                                    input[i].text = widget.qr_t12words[i];
+                                  }
+                                  //For comparing two list basically ----------->
+                                  Function deepEq =
+                                      DeepCollectionEquality().equals;
+                                  if (deepEq(
+                                      widget.qr_t12words, widget.t12words)) {
+                                    count = 12;
+                                  } else {
+                                    count = 0;
+                                  }
+                                  print(
+                                      'RESULT FROM QR PAGE-------------> ${widget.qr_t12words}');
+                                });
                               },
                             )),
                         SizedBox(
@@ -322,7 +350,7 @@ class _ConfirmSeedState extends State<ConfirmSeed> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  KeyGen(widget.words!)));
+                                                  KeyGen(widget.words)));
                                     }
                                   : null
                               // ScaffoldMessenger.of(context)
