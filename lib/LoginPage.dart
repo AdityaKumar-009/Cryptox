@@ -16,7 +16,7 @@ class LoginPage extends StatelessWidget {
             begin: Alignment(0.0, 1.0),
           ),
         ),
-        width: double.infinity,
+        width: double.infinity, //To take full possible screen width
         // color: Colors.orange,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -42,6 +42,7 @@ class LoginPage extends StatelessWidget {
                     fontWeight: FontWeight.w900,
                   )),
             ),
+            //--------------------- |       PREVIOUS TEXT      | --------------------------->
             // RichText(
             //   text: const TextSpan(
             //       // text: 'Welcome to ',
@@ -83,25 +84,18 @@ class LoginPage extends StatelessWidget {
               height: 50,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  // backgroundColor: const Color(0xfff0f8ff),
+                  //To Add new styles to existing button
                   backgroundColor: Colors.white,
-                  //background color of button
-                  // side: const BorderSide(width: 2, color: Colors.orange),
-                  //border width and color
                   elevation: 3,
-                  // shadowColor: Color(0xff57aef5),
-                  //elevation of button
                   shape: RoundedRectangleBorder(
                       //to set border radius to button
                       borderRadius: BorderRadius.circular(30)),
-                  //content padding inside button
                 ),
                 onPressed: () {
                   Navigator.pushReplacement(
+                      //To Invoke New Page (in this case that is MyHomePage which is an account dashboard screen).
                       context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              MyHomePage(title: 'Hi, Aditya')));
+                      MaterialPageRoute(builder: (context) => MyHomePage()));
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -196,7 +190,7 @@ class LoginPage extends StatelessWidget {
                       color: Color(0xffebffdf),
                     ),
                     child: Icon(
-                      FontAwesomeIcons.whatsapp,
+                      Icons.mobile_friendly,
                       color: Colors.green.shade300,
                     ),
                   ),

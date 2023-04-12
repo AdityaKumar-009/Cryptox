@@ -23,7 +23,7 @@ class MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Cryptox',
-      debugShowCheckedModeBanner: false,
+      debugShowCheckedModeBanner: false, //To remove Debug Banner on AppBar
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),

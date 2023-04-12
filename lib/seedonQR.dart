@@ -1,12 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:encrypt/encrypt.dart' as enc;
 
 class SeedonQR extends StatelessWidget {
   String? seedPhrase;
+  String? encryptedVal;
+  String? decryptedVal;
 
   SeedonQR(String seed, {super.key}) {
     seedPhrase = seed;
+  }
+
+  //Logic for encryption
+  String encryption() {
+    final mykey = enc.Key.fromUtf8(
+        'It is my Secret Key No One Knows'); //It should of 16,32 character size to work, since key is of 128/256 bits but 1UTF8 character size is 4bits, means 32[char needed]*4 = 128bits
+    print(mykey.length);
+    final iv = enc.IV.fromLength(16);
+
+    final encrypter = enc.Encrypter(enc.AES(mykey));
+
+    final encrypted = encrypter.encrypt(seedPhrase!, iv: iv);
+
+    decryptedVal = encrypter.decrypt(encrypted, iv: iv);
+
+    encryptedVal = encrypted.base64;
+
+    print('ENCRYPTED VALUE ------------->  $encryptedVal');
+    print('DECRYPTED VALUE ------------->  $decryptedVal');
+    return encryptedVal!; //Using Not symbol [ ! ] after variable means it will not be null.
   }
 
   @override
@@ -69,7 +92,7 @@ class SeedonQR extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           QrImage(
-                            data: seedPhrase!,
+                            data: encryption(),
                             version: QrVersions.auto,
                             size: 320,
                             gapless: false,

@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
-import 'package:cryptoX/confirmSeed.dart';
+import 'package:cryptoX/profilepage.dart';
+import 'package:encrypt/encrypt.dart' as enc;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:flutter/material.dart';
@@ -8,12 +9,15 @@ import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class Scan2Pay extends StatefulWidget {
   int? page;
+
   Scan2Pay(int p, {super.key}) {
     page = p;
   }
+
   String? words;
   List tw = [];
   String one_word = '';
+
   @override
   State<StatefulWidget> createState() => _Scan2PayState();
 }
@@ -69,6 +73,7 @@ class _Scan2PayState extends State<Scan2Pay> {
                   await controller?.resumeCamera();
                 },
                 child: SizedBox(height: h!, child: _buildQrView(context))),
+            //Using Not symbol [ ! ] after variable means it will not be null.
             Positioned(
               // margin: const EdgeInsets.all(8),
               top: 50,
@@ -103,9 +108,10 @@ class _Scan2PayState extends State<Scan2Pay> {
                     right: 30,
                     child: InkWell(
                       onTap: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text('OPENING: MY ADDRESS QR PAGE')));
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ProfilePage()));
                       },
                       child: Container(
                         height: 40,
@@ -142,7 +148,7 @@ class _Scan2PayState extends State<Scan2Pay> {
                           if (result != null)
                             Text(
                                 // 'Barcode Type: ${describeEnum(result!.format)}   '
-                                'Data: ${result!.code}')
+                                'Other\'s Address: ${result!.code}') //Using Not symbol [ ! ] after variable means it will not be null.
                           else
                             const Text(
                               'Scan a code',
@@ -281,35 +287,10 @@ class _Scan2PayState extends State<Scan2Pay> {
         result = scanData;
 
         if (result!.code != null && widget.page == 2) {
-          print("LENGTH--------------->${result!.code!.length}");
-          widget.words = result!.code;
-          if (widget.tw.length != 12) {
-            for (int i = 0; i < widget.words!.length; i++) {
-              if (widget.words![i] == ' ') {
-                widget.tw.add(widget.one_word);
-                widget.one_word = '';
-              } else {
-                widget.one_word += widget.words![i];
-              }
-              if (i == widget.words!.length - 1) {
-                widget.tw.add(widget.one_word);
-              }
-            }
-          }
-
-          if (true) {
-            controller.pauseCamera();
-            Navigator.pop(context, widget.tw);
-            // .then((_) {
-            // controller.resumeCamera();
-            // });
-          }
-
-          print('WORDS: ${widget.words}\n LIST_OF_WORDS: ${widget.tw}');
-          // setState(() {
-          //   ScaffoldMessenger.of(context)
-          //       .showSnackBar(SnackBar(content: Text(widget.tw.toString())));
-          // });
+          decryptor(result, controller);
+          ScaffoldMessenger.of(context).removeCurrentSnackBar();
+          controller.pauseCamera();
+          Navigator.pop(context, widget.tw);
         }
       });
     });
@@ -318,9 +299,68 @@ class _Scan2PayState extends State<Scan2Pay> {
   void _onPermissionSet(BuildContext context, QRViewController ctrl, bool p) {
     log('${DateTime.now().toIso8601String()}_onPermissionSet $p');
     if (!p) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('No Camera Permission!')),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        showCloseIcon: true,
+        backgroundColor: Colors.red.shade700,
+        behavior: SnackBarBehavior.floating,
+        content: const Text(
+          'No Camera Permission allowed by the User!',
+          style: TextStyle(fontFamily: 'Poppins', fontWeight: FontWeight.w600),
+        ),
+      ));
     }
+  }
+
+  void decryptor(Barcode? result, QRViewController controller) {
+    //Using Not symbol [ ! ] after variable means it will not be null.
+    print("LENGTH ---------------> ${result!.code!.length}");
+    //Making SameKey as we created in the SeedonQR page
+    final mykey =
+        enc.Key.fromUtf8('It is my Secret Key No One Knows'); //.fromUtf8(
+    //'It is my Secret Key No One Knows'); //It should of 16,32 character size to work, since key is of 128/256 bits but 1UTF8 character size is 4bits, means 32[char needed]*4 = 128bits
+
+    //Making IV as we created in the SeedonQR page
+    final iv = enc.IV.fromLength(16);
+
+    final encrypter = enc.Encrypter(enc.AES(mykey));
+
+    try {
+      final decryptedVal = encrypter.decrypt64(result.code!, iv: iv);
+      widget.words = decryptedVal;
+    } catch (e) {
+      // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      //   showCloseIcon: true,
+      //   backgroundColor: Colors.red.shade700,
+      //   behavior: SnackBarBehavior.floating,
+      //   content: const Text(
+      //     'INVALID QR',
+      //     style:
+      //     TextStyle(fontFamily: 'Poppins', fontWeight: FontWeight.w600),
+      //   ),
+      // ));
+    }
+
+    print(
+        'WORDS DECRYPTED HURRAY ----------------------------> ${widget.words}');
+    if (widget.tw.length != 12) {
+      for (int i = 0; i < widget.words!.length; i++) {
+        if (widget.words![i] == ' ') {
+          widget.tw.add(widget.one_word);
+          widget.one_word = '';
+        } else {
+          widget.one_word += widget.words![i];
+        }
+        if (i == widget.words!.length - 1) {
+          widget.tw.add(widget.one_word);
+        }
+      }
+    }
+
+    print('WORDS: ${widget.words}\n LIST_OF_WORDS: ${widget.tw}');
+
+    // setState(() {
+    //   ScaffoldMessenger.of(context)
+    //       .showSnackBar(SnackBar(content: Text(widget.tw.toString())));
+    // });
   }
 }

@@ -22,9 +22,9 @@ class ConfirmSeed extends StatefulWidget {
     words = wordPhrases;
     // print(words);
     qr_t12words = twlv_wrds_qr;
-    print('QR_WORDS: ${qr_t12words}');
+    print('QR_WORDS: $qr_t12words');
     t12words = twlv_words;
-    print('PREVIOUS PAGE_WORDS: ${t12words}');
+    print('PREVIOUS PAGE_WORDS: $t12words');
   }
 
   @override
@@ -276,7 +276,7 @@ class _ConfirmSeedState extends State<ConfirmSeed> {
                   Container(
                     margin: const EdgeInsets.only(top: 168),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         SizedBox(
                             width: 175,
@@ -286,9 +286,8 @@ class _ConfirmSeedState extends State<ConfirmSeed> {
                                 elevation: 5,
                                 backgroundColor: const Color(0xff1e1e1e),
                                 shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(30),
-                                      bottomLeft: Radius.circular(30)),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(8)),
                                 ),
                               ),
                               child: Row(
@@ -311,14 +310,16 @@ class _ConfirmSeedState extends State<ConfirmSeed> {
                                     MaterialPageRoute(
                                         builder: (context) => Scan2Pay(2)));
                                 setState(() {
-                                  widget.flag = 1;
-                                  widget.qr_t12words = res!;
+                                  widget.flag =
+                                      1; // flag = 1, Means we fetched the value from generated QR
+                                  widget.qr_t12words =
+                                      res!; //Using Not symbol [ ! ] after variable means it will not be null.
                                   for (int i = 0; i < 12; i++) {
                                     input[i].text = widget.qr_t12words[i];
                                   }
                                   //For comparing two list basically ----------->
                                   Function deepEq =
-                                      DeepCollectionEquality().equals;
+                                      const DeepCollectionEquality().equals;
                                   if (deepEq(
                                       widget.qr_t12words, widget.t12words)) {
                                     count = 12;
@@ -339,14 +340,13 @@ class _ConfirmSeedState extends State<ConfirmSeed> {
                                 foregroundColor: Colors.white,
                                 backgroundColor: const Color(0xff42a14e),
                                 shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.only(
-                                      topRight: Radius.circular(30),
-                                      bottomRight: Radius.circular(30)),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(8)),
                                 ),
                               ),
                               onPressed: count == 12
                                   ? () {
-                                      Navigator.push(
+                                      Navigator.pushReplacement(
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>

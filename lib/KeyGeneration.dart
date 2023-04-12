@@ -1,6 +1,8 @@
+import 'package:cryptoX/MyDashBoardPage.dart';
 import 'package:cryptoX/secret_keys.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class KeyGen extends StatefulWidget {
   String? seedPhrase;
@@ -21,12 +23,14 @@ class _KeyGenState extends State<KeyGen> {
   generate() async {
     WalletAddress service = WalletAddress();
 
-    final privateKey = await service.getPrivateKey(widget.seedPhrase!);
+    final privateKey = await service.getPrivateKey(widget
+        .seedPhrase!); //Using Not symbol [ ! ] after variable means it will not be null.
     final publicKey = await service.getPublicKey(privateKey);
 
     setState(() {
       privAddress = privateKey;
       pubAddress = publicKey.toString();
+      wallet_created();
     });
   }
 
@@ -42,11 +46,11 @@ class _KeyGenState extends State<KeyGen> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         foregroundColor: Colors.black,
-        leading: IconButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            icon: const Icon(FontAwesomeIcons.close)),
+        // leading: IconButton(
+        //     onPressed: () {
+        //       Navigator.of(context).pop();
+        //     },
+        //     icon: const Icon(FontAwesomeIcons.close)),
         title: const Text('WALLET CREATED',
             textAlign: TextAlign.center,
             style: TextStyle(
@@ -69,8 +73,7 @@ class _KeyGenState extends State<KeyGen> {
               children: [
                 Center(
                     child: Container(
-                  margin: const EdgeInsets.all(30),
-                  alignment: Alignment.center,
+                  margin: const EdgeInsets.all(30), alignment: Alignment.center,
                   // height: 80,
                   width: MediaQuery.of(context).size.width,
                   color: const Color(0xff7cb76f),
@@ -161,6 +164,38 @@ class _KeyGenState extends State<KeyGen> {
                     ),
                   ),
                 ),
+                Container(
+                  margin: EdgeInsets.all(20),
+                  width: 200,
+                  height: 50,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      elevation: 5,
+                      backgroundColor: const Color(0xff1e1e1e),
+                      shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(8))),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: const [
+                        Icon(FontAwesomeIcons.wallet),
+                        Text(
+                          'Main Page',
+                          style: TextStyle(
+                              fontSize: 15,
+                              fontFamily: 'Poppins',
+                              fontWeight: FontWeight.w600),
+                        ),
+                      ],
+                    ),
+                    onPressed: () async {
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => MyHomePage()));
+                    },
+                  ),
+                )
               ],
             ),
           ),
@@ -168,4 +203,27 @@ class _KeyGenState extends State<KeyGen> {
       ),
     );
   }
+
+  void wallet_created() async {
+    SharedPreferences sp = await SharedPreferences.getInstance();
+    bool isC = await sp.setBool(MyHomePageState.IS_CREATED, true);
+    if (isC) {
+      print('--------->_ISCREATED SUCCESSFULLY!');
+    }
+    bool isP = await sp.setString(MyHomePageState.PUBLICADDRESS, pubAddress!);
+    if (isP) {
+      print('------------->pubAdress updated SUCCESSFULLY!');
+    }
+
+    //Using Not symbol [ ! ] after variable means it will not be null.
+  }
+
+  // wallet_created() async {
+  //   SharedPreferences sp = await SharedPreferences.getInstance();
+  //   await sp.setBool(MyHomePageState.IS_CREATED, true);
+  //   await sp.setString(
+  //       MyHomePageState.PUBLICADDRESS,
+  //       pubAddress
+  //           .toString()); //Using Not symbol [ ! ] after variable means it will not be null.
+  // }
 }

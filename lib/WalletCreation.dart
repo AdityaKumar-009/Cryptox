@@ -250,7 +250,7 @@ class _WalletCreationState extends State<WalletCreation> {
                   Container(
                     margin: const EdgeInsets.only(top: 6),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         SizedBox(
                             width: 180,
@@ -260,9 +260,8 @@ class _WalletCreationState extends State<WalletCreation> {
                                 elevation: 5,
                                 backgroundColor: const Color(0xff1e1e1e),
                                 shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(30),
-                                      bottomLeft: Radius.circular(30)),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(8)),
                                 ),
                               ),
                               child: Row(
@@ -295,9 +294,8 @@ class _WalletCreationState extends State<WalletCreation> {
                                 elevation: 5,
                                 backgroundColor: const Color(0xff42a14e),
                                 shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.only(
-                                      topRight: Radius.circular(30),
-                                      bottomRight: Radius.circular(30)),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(8)),
                                 ),
                               ),
                               child: Row(
