@@ -5,7 +5,11 @@ import 'package:encrypt/encrypt.dart' as enc;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
+
+import 'apptheme/theme.dart';
 
 class Scan2Pay extends StatefulWidget {
   int? page;
@@ -22,13 +26,32 @@ class Scan2Pay extends StatefulWidget {
   State<StatefulWidget> createState() => _Scan2PayState();
 }
 
-class _Scan2PayState extends State<Scan2Pay> {
+class _Scan2PayState extends State<Scan2Pay>
+    with SingleTickerProviderStateMixin {
   Barcode? result;
   QRViewController? controller;
+  bool isOff = false;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+  String txt = 'Wrong Password';
+
+  late final AnimationController _animcontroller = AnimationController(
+    vsync: this,
+    duration: const Duration(
+      milliseconds: 1700,
+    ),
+  );
+
+  @override
+  void initState() {
+    Future.delayed(const Duration(milliseconds: 500), () {
+      _animcontroller.forward();
+    });
+    super.initState();
+  }
 
   @override
   void dispose() {
+    _animcontroller.dispose();
     controller?.dispose();
     super.dispose();
   }
@@ -68,16 +91,68 @@ class _Scan2PayState extends State<Scan2Pay> {
         width: double.infinity,
         child: Stack(
           children: <Widget>[
-            InkWell(
-                onTap: () async {
-                  await controller?.resumeCamera();
-                },
-                child: SizedBox(height: h!, child: _buildQrView(context))),
+            SizedBox(height: h, child: _buildQrView(context)),
             //Using Not symbol [ ! ] after variable means it will not be null.
+            Positioned(
+              top: w / 2.5,
+              left: w / 2 - 55,
+              // right: 50,
+              child: Text(
+                'Scan a QR',
+                style: TextStyle(
+                  color: accentColor(),
+                  fontSize: 22,
+                  fontFamily: 'Space',
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            Positioned(
+                top: 0,
+                left: 0,
+                right: 0,
+                child: InkWell(
+                  onTap: () async {
+                    await controller?.resumeCamera();
+                    setState(() {
+                      isOff = false;
+                    });
+                  },
+                  child: SizedBox(
+                    // color: Colors.red,
+                    height: h,
+                    child: (!isOff)
+                        ? Lottie.asset('assets/anim/scan.json',
+                            // 'https://assets5.lottiefiles.com/packages/lf20_odNqQgGlnU.json',
+                            // 'https://assets4.lottiefiles.com/packages/lf20_d4tt1t6i.json',
+                            width: 300)
+                        : const SizedBox(),
+                  ),
+                )),
+            Positioned(
+                top: 50,
+                left: 20,
+                child: InkWell(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: Container(
+                    height: 40,
+                    width: 40,
+                    decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                    ),
+                    child: Icon(
+                      FontAwesomeIcons.xmark,
+                      color: accentColor(),
+                      size: 30,
+                    ),
+                  ),
+                )),
             Positioned(
               // margin: const EdgeInsets.all(8),
               top: 50,
-              left: 30,
+              right: 20,
               child: InkWell(
                   onTap: () async {
                     await controller?.toggleFlash();
@@ -91,13 +166,17 @@ class _Scan2PayState extends State<Scan2Pay> {
                         width: 40,
                         decoration: const BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(10)),
-                          color: Color(0xffd8edf5),
+                          // color: Color(0xffd8edf5),
                         ),
                         child: ('${snapshot.data}' == 'true')
-                            ? const Icon(FontAwesomeIcons.boltLightning,
-                                color: Colors.orangeAccent)
-                            : const Icon(FontAwesomeIcons.boltLightning,
-                                color: Colors.black),
+                            ? Icon(Icons.flash_on_sharp,
+                                color: accentColor(), size: 30)
+                            : Icon(
+                                Icons.flash_off_sharp,
+                                color: accentColor(),
+                                size: 30,
+                                // color: Colors.black
+                              ),
                       ); //Text('Flash: ${snapshot.data}');
                     },
                   )),
@@ -105,7 +184,7 @@ class _Scan2PayState extends State<Scan2Pay> {
             widget.page == 1
                 ? Positioned(
                     top: 50,
-                    right: 30,
+                    right: 70,
                     child: InkWell(
                       onTap: () {
                         Navigator.pushReplacement(
@@ -118,11 +197,10 @@ class _Scan2PayState extends State<Scan2Pay> {
                         width: 40,
                         decoration: const BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(10)),
-                          color: Color(0xffd8edf5),
                         ),
                         child: Icon(
                           FontAwesomeIcons.qrcode,
-                          color: Colors.blue.shade300,
+                          color: accentColor(),
                         ),
                       ),
                     ))
@@ -132,14 +210,15 @@ class _Scan2PayState extends State<Scan2Pay> {
                     width: w,
                     bottom: 0,
                     child: Container(
-                      height: 180,
+                      height: 130,
                       decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(30),
-                            topRight: Radius.circular(30)),
-                        color: Color(0xffd8edf5),
-                        // border: ,
-                      ),
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(16),
+                              topRight: Radius.circular(16)),
+                          // color: Color(0xffd8edf5),
+                          color: Color(0xffffeccf)
+                          // border: ,
+                          ),
 
                       // fit: BoxFit.contain,
                       child: Column(
@@ -150,12 +229,12 @@ class _Scan2PayState extends State<Scan2Pay> {
                                 // 'Barcode Type: ${describeEnum(result!.format)}   '
                                 'Other\'s Address: ${result!.code}') //Using Not symbol [ ! ] after variable means it will not be null.
                           else
-                            const Text(
-                              'Scan a code',
+                            Text(
+                              'Enter Address',
                               style: TextStyle(
-                                color: Colors.blue,
+                                color: accentColor(),
                                 fontSize: 22,
-                                fontFamily: 'Poppins',
+                                fontFamily: 'Space',
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
@@ -197,19 +276,34 @@ class _Scan2PayState extends State<Scan2Pay> {
                               Expanded(
                                 flex: 20,
                                 child: TextField(
+                                  autocorrect: false,
+                                  cursorColor: accentColor(),
                                   decoration: InputDecoration(
-                                    hintText: 'OR Enter Address here...',
+                                    fillColor: Colors.white,
+                                    filled: true,
+                                    hintText: '0x - - - - - - - - - - - - - ',
+                                    helperMaxLines: 2,
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                      borderSide: BorderSide.none,
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                      borderSide: BorderSide.none,
+                                    ),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                   ),
                                   onTap: () async {
                                     await controller?.pauseCamera();
+                                    setState(() {
+                                      isOff = true;
+                                    });
                                   },
+                                  textAlign: TextAlign.center,
                                   style: const TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w400,
-                                      fontFamily: 'Poppins'),
+                                      fontSize: 15, fontFamily: 'Space'),
                                 ),
                               ),
                               const Expanded(
@@ -223,8 +317,14 @@ class _Scan2PayState extends State<Scan2Pay> {
                                 child: SizedBox(
                                   height: 50,
                                   child: TextButton(
+                                    style: TextButton.styleFrom(
+                                      foregroundColor: primaryColor(),
+                                    ),
                                     onPressed: () async {
                                       await controller?.pauseCamera();
+                                      setState(() {
+                                        isOff = true;
+                                      });
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(const SnackBar(
                                               content: Text(
@@ -268,8 +368,8 @@ class _Scan2PayState extends State<Scan2Pay> {
       key: qrKey,
       onQRViewCreated: _onQRViewCreated,
       overlay: QrScannerOverlayShape(
-          borderColor: Colors.blueAccent,
-          borderRadius: 15,
+          borderColor: accentColor(),
+          borderRadius: 16,
           borderLength: 30,
           borderWidth: 10,
           cutOutSize: scanArea),
@@ -286,11 +386,9 @@ class _Scan2PayState extends State<Scan2Pay> {
       setState(() {
         result = scanData;
 
-        if (result!.code != null && widget.page == 2) {
+        if (result!.code != null && widget.page != 1) {
           decryptor(result, controller);
-          ScaffoldMessenger.of(context).removeCurrentSnackBar();
-          controller.pauseCamera();
-          Navigator.pop(context, widget.tw);
+          // ScaffoldMessenger.of(context).removeCurrentSnackBar();
         }
       });
     });
@@ -305,29 +403,336 @@ class _Scan2PayState extends State<Scan2Pay> {
         behavior: SnackBarBehavior.floating,
         content: const Text(
           'No Camera Permission allowed by the User!',
-          style: TextStyle(fontFamily: 'Poppins', fontWeight: FontWeight.w600),
+          style: TextStyle(fontFamily: 'Space', fontWeight: FontWeight.w600),
         ),
       ));
     }
   }
 
+  String doDecryption({String key = '', required Barcode res}) {
+    String dfault = 'It is my Secret Key No One Knows';
+    enc.Key myfinalkey;
+    if (key.isEmpty) {
+      myfinalkey = enc.Key.fromUtf8(dfault);
+    } //It should of 16,32 character size to work, since key is of 128/256 bits but 1UTF8 character size is 4bits, means 32[char needed]*4 = 128bits
+    else {
+      print(
+          'KEY IS -------------------> ${key} \t\t [LENGTH]----->${key.length}');
+      String key32len = key;
+      print(
+          'MY 32 LENGTH KEY [BEFORE LOOP]-------------------> ${key32len} [LENGTH]----->${key32len.length}');
+      for (int i = key.length; i < 32; i++) {
+        key32len += '*';
+      }
+      print(
+          'MY 32 LENGTH KEY [AFTER LOOP]-------------------> $key32len  [LENGTH]----->${key32len.length}');
+      myfinalkey = enc.Key.fromUtf8(key32len);
+    }
+
+    print(myfinalkey.length);
+
+    final iv = enc.IV.fromLength(16);
+
+    final encrypter = enc.Encrypter(enc.AES(myfinalkey));
+
+    final decryptedVal = encrypter.decrypt64(res.code.toString(), iv: iv);
+
+    // if (decryptedVal.isEmpty) {
+    //   setState(() {
+    //     txt = 'Invalid Password or Invalid QR!';
+    //   });
+    // }
+    print('DECRYPTED VALUE ------------->  $decryptedVal');
+
+    return decryptedVal;
+  }
+
   void decryptor(Barcode? result, QRViewController controller) {
     //Using Not symbol [ ! ] after variable means it will not be null.
     print("LENGTH ---------------> ${result!.code!.length}");
-    //Making SameKey as we created in the SeedonQR page
-    final mykey =
-        enc.Key.fromUtf8('It is my Secret Key No One Knows'); //.fromUtf8(
-    //'It is my Secret Key No One Knows'); //It should of 16,32 character size to work, since key is of 128/256 bits but 1UTF8 character size is 4bits, means 32[char needed]*4 = 128bits
-
-    //Making IV as we created in the SeedonQR page
-    final iv = enc.IV.fromLength(16);
-
-    final encrypter = enc.Encrypter(enc.AES(mykey));
 
     try {
-      final decryptedVal = encrypter.decrypt64(result.code!, iv: iv);
-      widget.words = decryptedVal;
+      widget.words = doDecryption(res: result);
+      print(
+          'WORDS DECRYPTED HURRAY ----------------------------> ${widget.words}');
+      if (widget.tw.length != 12) {
+        widget.tw = widget.words!.split(' ');
+      }
+      print('WORDS ---> ${widget.words}\n LIST_OF_WORDS ---> ${widget.tw}');
+      if (widget.tw.length == 12) {
+        controller.pauseCamera();
+        setState(() {
+          isOff = true;
+        });
+        Navigator.maybePop(context, widget.tw);
+      }
+      if (widget.page == 3 && widget.tw.length == 1) {
+        controller.pauseCamera();
+        setState(() {
+          isOff = true;
+        });
+        Navigator.maybePop(context, widget.tw);
+      }
     } catch (e) {
+      String custom_key = '';
+      print(e);
+
+      var alertStyle = AlertStyle(
+        animationType: AnimationType.grow,
+        // isCloseButton: false,
+        isOverlayTapDismiss: false,
+
+        descTextAlign: TextAlign.start,
+        animationDuration: const Duration(milliseconds: 400),
+        alertBorder: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: BorderSide.none,
+        ),
+        titleStyle: const TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 16,
+            fontFamily: 'Space',
+            color: Colors.red),
+      );
+
+      controller.pauseCamera();
+      setState(() {
+        isOff = true;
+      });
+      // TextEditingController passwd = TextEditingController();
+
+      // bool enabled = false;
+      dynamic popup;
+      popup = Alert(
+        closeFunction: () {
+          controller.resumeCamera();
+          setState(() {
+            isOff = false;
+          });
+          popup.dismiss();
+        },
+        context: context,
+        style: alertStyle,
+        type: AlertType.info,
+        title: "Password Required",
+        // desc: "This QR is encrypted using a custom password.",
+        content: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Container(
+              margin: const EdgeInsets.only(bottom: 10, top: 10),
+              child: Text(
+                'This QR may encrypted using a custom password.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 12,
+                    fontFamily: 'Space',
+                    color: Colors.grey.shade500),
+              ),
+            ),
+            Container(
+              width: 320,
+              margin: const EdgeInsets.all(10),
+              child: TextField(
+                // controller: passwd,
+                onChanged: (message) {
+                  setState(() {
+                    custom_key = message;
+                  });
+                },
+                onSubmitted: (message) {
+                  setState(() {
+                    custom_key = message;
+                  });
+                },
+                decoration: InputDecoration(
+                  fillColor: Colors.white,
+                  filled: true,
+                  hintText: 'Enter password here...',
+                  helperMaxLines: 2,
+                  helperStyle: const TextStyle(
+                    fontSize: 12,
+                    fontFamily: 'Space',
+                    // color: Colors.red,
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide:
+                        BorderSide(width: .5, color: Colors.grey.shade400),
+                    borderRadius: BorderRadius.circular(0),
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(0),
+                  ),
+                ),
+                maxLength: 32,
+                style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w400,
+                    fontFamily: 'Space'),
+              ),
+            ),
+            // Text(txt),
+          ],
+        ),
+        buttons: [
+          DialogButton(
+            onPressed: () async {
+              try {
+                widget.words = doDecryption(key: custom_key, res: result);
+                print(
+                    'WORDS DECRYPTED HURRAY ----------------------------> ${widget.words}');
+                List lst = [];
+                if (widget.tw.length != 12) {
+                  lst = widget.words!.split(' ');
+                }
+                widget.tw = lst;
+                popup.dismiss();
+                if (widget.tw.length == 12) {
+                  Navigator.pop(context, widget.tw);
+                } else if (widget.page == 3 && widget.tw.length == 1) {
+                  controller.pauseCamera();
+                  setState(() {
+                    isOff = true;
+                  });
+                  Navigator.maybePop(context, widget.tw);
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    // showCloseIcon: true,
+                    backgroundColor: Colors.red.shade800,
+                    behavior: SnackBarBehavior.floating,
+                    content: Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: const [
+                              Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Icon(
+                                  Icons.error,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              SizedBox(
+                                // width: double.infinity - 200,
+                                child: Text(
+                                  'ERROR OCCURRED!',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontFamily: 'Space',
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 18),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const Divider(),
+                          const Text(
+                            'Reasons can be:',
+                            style: TextStyle(
+                                fontFamily: 'Space',
+                                fontWeight: FontWeight.w600,
+                                fontSize: 12),
+                          ),
+                          const Text(
+                            '1. Incorrect password entered.',
+                            style: TextStyle(fontFamily: 'Space', fontSize: 10),
+                          ),
+                          const Text(
+                            '2. Scanned an invalid QR.',
+                            style: TextStyle(fontFamily: 'Space', fontSize: 10),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ));
+                  controller.resumeCamera();
+                  setState(() {
+                    isOff = false;
+                  });
+                }
+              } catch (e) {
+                print("Error Occurred!");
+                popup.dismiss();
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  // showCloseIcon: true,
+                  backgroundColor: Colors.red.shade800,
+                  behavior: SnackBarBehavior.floating,
+                  content: Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Icon(
+                                Icons.error,
+                                color: Colors.white,
+                              ),
+                            ),
+                            SizedBox(
+                              // width: double.infinity - 200,
+                              child: Text(
+                                'ERROR OCCURRED!',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontFamily: 'Space',
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 18),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const Divider(),
+                        const Text(
+                          'Reasons can be:',
+                          style: TextStyle(
+                              fontFamily: 'Space',
+                              fontWeight: FontWeight.w600,
+                              fontSize: 12),
+                        ),
+                        const Text(
+                          '1. Incorrect password entered.',
+                          style: TextStyle(fontFamily: 'Space', fontSize: 10),
+                        ),
+                        const Text(
+                          '2. Scanned an invalid QR.',
+                          style: TextStyle(fontFamily: 'Space', fontSize: 10),
+                        ),
+                      ],
+                    ),
+                  ),
+                ));
+                controller.resumeCamera();
+                setState(() {
+                  isOff = false;
+                });
+              }
+            },
+            // color: const Color.fromRGBO(0, 179, 134, 1.0),
+            color: accentColor(),
+            radius: BorderRadius.circular(8),
+            width: 80,
+            child: const Text(
+              "OK",
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontFamily: 'Space',
+                  fontWeight: FontWeight.w600),
+            ),
+          ),
+        ],
+      );
+      popup.show();
       // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       //   showCloseIcon: true,
       //   backgroundColor: Colors.red.shade700,
@@ -335,28 +740,10 @@ class _Scan2PayState extends State<Scan2Pay> {
       //   content: const Text(
       //     'INVALID QR',
       //     style:
-      //     TextStyle(fontFamily: 'Poppins', fontWeight: FontWeight.w600),
+      //     TextStyle(fontFamily: 'Space', fontWeight: FontWeight.w600),
       //   ),
       // ));
     }
-
-    print(
-        'WORDS DECRYPTED HURRAY ----------------------------> ${widget.words}');
-    if (widget.tw.length != 12) {
-      for (int i = 0; i < widget.words!.length; i++) {
-        if (widget.words![i] == ' ') {
-          widget.tw.add(widget.one_word);
-          widget.one_word = '';
-        } else {
-          widget.one_word += widget.words![i];
-        }
-        if (i == widget.words!.length - 1) {
-          widget.tw.add(widget.one_word);
-        }
-      }
-    }
-
-    print('WORDS: ${widget.words}\n LIST_OF_WORDS: ${widget.tw}');
 
     // setState(() {
     //   ScaffoldMessenger.of(context)

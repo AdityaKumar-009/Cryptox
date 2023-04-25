@@ -50,11 +50,11 @@ class _ProfilePageState extends State<ProfilePage> {
             children: [
               Container(
                 margin: const EdgeInsets.only(top: 55, bottom: 35, left: 8),
-                child: Text('Hi, $usr_name',
+                child: Text('Hi, $userName',
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                         fontSize: 30,
-                        fontFamily: 'Poppins',
+                        fontFamily: 'Space',
                         // color: Color.fromARGB(255, 71, 217, 204),
                         // color: Colors.black,
                         fontWeight: FontWeight.w700)),
@@ -152,7 +152,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     const Text(
                       'My Wallet',
-                      style: TextStyle(fontFamily: 'Poppins', fontSize: 12),
+                      style: TextStyle(fontFamily: 'Space', fontSize: 12),
                     ),
                   ],
                 ),
@@ -181,7 +181,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     const Text(
                       'My Profile',
                       style: TextStyle(
-                          fontFamily: 'Poppins',
+                          fontFamily: 'Space',
                           fontWeight: FontWeight.w600,
                           fontSize: 12),
                     )
@@ -212,7 +212,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   //       textAlign: TextAlign.justify,
                   //       style: TextStyle(
                   //           fontSize: 15,
-                  //           fontFamily: 'Poppins',
+                  //           fontFamily: 'Space',
                   //           color: Color(0xffc73333),
                   //           fontWeight: FontWeight.w500)),
                   // ),
@@ -239,7 +239,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     textAlign: TextAlign.justify,
                                     style: TextStyle(
                                         fontSize: 15,
-                                        fontFamily: 'Poppins',
+                                        fontFamily: 'Space',
                                         color: Color(0xffc73333),
                                         fontWeight: FontWeight.w600)),
                                 InkWell(
@@ -254,8 +254,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                         behavior: SnackBarBehavior.floating,
                                         content: const Text(
                                           'Copied to your clipboard !',
-                                          style:
-                                              TextStyle(fontFamily: 'Poppins'),
+                                          style: TextStyle(fontFamily: 'Space'),
                                         ),
                                       ));
                                     });
@@ -299,7 +298,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                                         'Copied to your clipboard !',
                                                         style: TextStyle(
                                                             fontFamily:
-                                                                'Poppins'),
+                                                                'Space'),
                                                       ),
                                                     ));
                                                   });
@@ -316,7 +315,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                           ),
                                           const Text('Your Public Address: ',
                                               style: TextStyle(
-                                                  fontFamily: 'Poppins',
+                                                  fontFamily: 'Space',
                                                   color: Colors.black54,
                                                   fontSize: 14)),
                                           Container(
@@ -328,7 +327,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                                 // maxLines: 1,
                                                 // overflow: TextOverflow.ellipsis,
                                                 style: const TextStyle(
-                                                    fontFamily: 'Poppins',
+                                                    fontFamily: 'Space',
                                                     color: Colors.black54,
                                                     fontSize: 14,
                                                     fontWeight:
@@ -396,7 +395,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                         'Wallet is not created! Create it first from the \'My Wallet\' screen To show your Wallet Address which will allow you to do the transaction with others.',
                                         textAlign: TextAlign.justify,
                                         style: TextStyle(
-                                            fontFamily: 'Poppins',
+                                            fontFamily: 'Space',
                                             fontWeight: FontWeight.w600,
                                             fontSize: 18,
                                             color: Colors.red.shade400),
