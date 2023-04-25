@@ -2,14 +2,14 @@ import 'package:cryptoX/apptheme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
-class ThirdPage extends StatefulWidget {
-  const ThirdPage({super.key});
+class SecondPage extends StatefulWidget {
+  const SecondPage({super.key});
 
   @override
-  State<ThirdPage> createState() => _ThirdPageState();
+  State<SecondPage> createState() => _SecondPageState();
 }
 
-class _ThirdPageState extends State<ThirdPage> {
+class _SecondPageState extends State<SecondPage> {
   @override
   Widget build(BuildContext context) {
     return Column(

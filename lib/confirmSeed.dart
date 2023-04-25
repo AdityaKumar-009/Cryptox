@@ -246,7 +246,7 @@ class _ConfirmSeedState extends State<ConfirmSeed> {
                     ),
                     onPressed: ((count == 12 ||
                             widget.privAddress
-                                .isNotEmpty)) //---------------------------
+                                .isEmpty)) //---------------------------
                         ? () {
                             Navigator.pushReplacement(
                                 context,

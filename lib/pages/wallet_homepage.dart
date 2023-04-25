@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lottie/lottie.dart';
 
-import '../MyDashBoardPage.dart';
+import '../my_dashboard_page.dart';
 import '../WalletCreation.dart';
 import '../apptheme/theme.dart';
 import '../confirmSeed.dart';
@@ -31,42 +31,9 @@ class _FirstPageState extends State<FirstPage> {
           physics: const BouncingScrollPhysics(),
           child: Container(
               height: 920,
-              // color: Colors.white,
-              //New Change here---------
-              // color: const Color(0xfff9f9f9),
-              // color: const Color(0xff101010),
               child: Column(
-                // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                // mainAxisSize: MainAxisSize.min,
                 children: [
                   Balance(widget.flag, widget.MyAddress),
-                  Container(
-                    width: double.infinity,
-                    margin: const EdgeInsets.only(left: 25, right: 25),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Recent Transaction',
-                          style: TextStyle(
-                              color: primaryColor(),
-                              // color: Colors.white,
-                              fontFamily: 'Space',
-                              fontSize: 20,
-                              fontWeight: FontWeight.w900),
-                        ),
-                        Text(
-                          'View all',
-                          style: TextStyle(
-                              // color: complementColor(),
-                              color: accentColor(),
-                              fontFamily: 'Space',
-                              fontSize: 15,
-                              fontWeight: FontWeight.w900),
-                        ),
-                      ],
-                    ),
-                  ),
                   const RecentTransaction(),
                 ],
               ))),
@@ -95,9 +62,6 @@ class _BalanceState extends State<Balance> {
   @override
   build(context) {
     return SizedBox(
-      // margin: const EdgeInsets.only(top: 15, bottom: 25),
-      // height: 180,
-      // width: 350,
       child: (widget.flag == true)
           ? SingleChildScrollView(
               clipBehavior: Clip.none,
@@ -339,144 +303,6 @@ class _BalanceState extends State<Balance> {
                   ],
                 ),
               ))
-          // SizedBox(
-          //         height: 400,
-          //         child: Container(
-          //           child: Column(
-          //             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          //             children: [
-          //               SizedBox(
-          //                 height: 180,
-          //                 // margin: const EdgeInsets.only(top: 0),
-          //                 child: Card(
-          //                   shape: const RoundedRectangleBorder(
-          //                       borderRadius: BorderRadius.all(Radius.circular(8)),
-          //                       side: BorderSide(width: 0, color: Color(0xff9aceea)
-          //                           // color: Color(0xffffffff),
-          //                           )),
-          //                   elevation: 0,
-          //                   // color: Colors.white,
-          //                   color: const Color(0xffd8edf5),
-          //                   // shadowColor: const Color.fromRGBO(255, 172, 0, 0.25),
-          //                   child: Column(
-          //                     mainAxisAlignment: MainAxisAlignment.center,
-          //                     children: [
-          //                       const Text(
-          //                         'Available Balance',
-          //                         style: TextStyle(
-          //                           fontFamily: 'Space',
-          //                           fontWeight: FontWeight.w400,
-          //                           fontSize: 20,
-          //                           // color: Color(0xff0f87a2),
-          //                         ),
-          //                       ),
-          //                       const Text(
-          //                         '₹ 10,000',
-          //                         style: TextStyle(
-          //                             fontFamily: 'Space',
-          //                             fontSize: 35,
-          //                             fontWeight: FontWeight.w700,
-          //                             // color: Color.fromRGBO(248, 98, 66, 1.0),
-          //                             color: Colors.blue),
-          //                       ),
-          //                       const Text(
-          //                         'Wallet (ETH)',
-          //                         style: TextStyle(
-          //                           fontFamily: 'Space',
-          //                           fontWeight: FontWeight.w500,
-          //                           fontSize: 14,
-          //                           // color: Color(0xff000000),
-          //                         ),
-          //                       ),
-          //                       Row(
-          //                         mainAxisAlignment: MainAxisAlignment.center,
-          //                         children: [
-          //                           SizedBox(
-          //                             height: 25,
-          //                             child:
-          //                                 Image.asset('assets/images/ethereum.png'),
-          //                           ),
-          //                           const Text(
-          //                             '100',
-          //                             style: TextStyle(
-          //                               fontFamily: 'Space',
-          //                               fontWeight: FontWeight.w600,
-          //                               fontSize: 20,
-          //                               // color: Colors.orangeAccent,
-          //                             ),
-          //                           ),
-          //                         ],
-          //                       ),
-          //                     ],
-          //                   ),
-          //                 ),
-          //               ),
-          //               Container(
-          //                 height: 40,
-          //                 width: 250,
-          //                 decoration: BoxDecoration(
-          //                   color: Colors.grey.shade300,
-          //                   borderRadius:
-          //                       const BorderRadius.all(Radius.circular(30)),
-          //                 ),
-          //                 child: Padding(
-          //                   padding: const EdgeInsets.fromLTRB(15, 10, 10, 10),
-          //                   child: Row(
-          //                     crossAxisAlignment: CrossAxisAlignment.center,
-          //                     children: [
-          //                       const Text('My Address: ',
-          //                           style: TextStyle(
-          //                               fontFamily: 'Space',
-          //                               color: Colors.black54,
-          //                               fontSize: 14)),
-          //                       SizedBox(
-          //                           width: 111,
-          //                           child: Text(
-          //                             widget.pubAddrs!,
-          //                             maxLines: 1,
-          //                             overflow: TextOverflow.ellipsis,
-          //                             style: const TextStyle(
-          //                                 fontFamily: 'Space',
-          //                                 color: Colors.black54,
-          //                                 fontSize: 14),
-          //                           )),
-          //                       SizedBox(
-          //                         width: 25,
-          //                         child: IconButton(
-          //                             tooltip: 'Click to copy on the clipboard',
-          //                             onPressed: () async {
-          //                               Clipboard.setData(ClipboardData(
-          //                                       text: widget.pubAddrs))
-          //                                   .then((_) {
-          //                                 ScaffoldMessenger.of(context)
-          //                                     .showSnackBar(SnackBar(
-          //                                   showCloseIcon: true,
-          //                                   backgroundColor: Colors.green.shade700,
-          //                                   behavior: SnackBarBehavior.floating,
-          //                                   content: const Text(
-          //                                     'Copied to your clipboard !',
-          //                                     style: TextStyle(fontFamily: 'Space'),
-          //                                   ),
-          //                                 ));
-          //                               });
-          //                               // copied successfully
-          //                             },
-          //                             padding: const EdgeInsets.all(0),
-          //                             icon: const Icon(
-          //                               // FontAwesomeIcons.clipboard,
-          //                               Icons.content_copy_rounded,
-          //                               color: Colors.blue,
-          //                               size: 18,
-          //                             )),
-          //                       )
-          //                     ],
-          //                   ),
-          //                 ),
-          //               )
-          //             ],
-          //           ),
-          //         ),
-          //       )
           : SingleChildScrollView(
               clipBehavior: Clip.none,
               scrollDirection: Axis.horizontal,
@@ -687,124 +513,164 @@ class RecentTransaction extends StatefulWidget {
 class _RecentTransactionState extends State<RecentTransaction> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(left: 25.0, right: 25.0),
-      // height: 300,
-
-      // width: 350,
-      // decoration: BoxDecoration(
-      //   borderRadius: const BorderRadius.all(Radius.circular(8)),
-      //   border: Border.all(
-      //     color: const Color(0xffe0c2a4),
-      //     width: .5,
-      //   ),
-      //   //color: Colors.white
-      //   // color: const Color(0xfff8e0bf),
-      //   // border: ,
-      // ),
-      child: ListView.builder(
-        padding: const EdgeInsets.only(top: 15.0, bottom: 0),
-        shrinkWrap: true,
-        physics: const BouncingScrollPhysics(),
-        itemBuilder: (context, index) {
-          return Container(
-            margin: const EdgeInsets.only(top: 10, bottom: 10),
-            padding: const EdgeInsets.fromLTRB(0, 12, 0, 13),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              color: Colors.white,
-              boxShadow: const [
-                BoxShadow(
-                  color: Color(0xffe1e1e1),
-                  blurRadius: 40,
-                  // spreadRadius: 5
-                )
-              ],
-            ),
-            child: ListTile(
-              onTap: () => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content:
-                      Text('Payment Page is Opening for ${names[index]}'))),
-              leading: CircleAvatar(
-                radius: 28,
-                backgroundColor: Colors.grey.shade200,
-                // backgroundImage: AssetImage('assets/images/Adit.jpg'),
-              ),
-              title: Text(
-                names[index],
+    return Column(
+      children: [
+        Container(
+          width: double.infinity,
+          margin: const EdgeInsets.only(left: 25, right: 25),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Recent Transaction',
                 style: TextStyle(
                     color: primaryColor(),
                     fontFamily: 'Space',
-                    fontSize: 15,
+                    fontSize: 20,
                     fontWeight: FontWeight.w900),
               ),
-              subtitle: Text(
-                '12:00 AM - Payment Recieved',
-                style: TextStyle(
-                    color: complementColor(),
-                    fontFamily: 'Space',
-                    fontSize: 11,
-                    fontWeight: FontWeight.w900),
+              InkWell(
+                onTap: () {
+                  setState(() {
+                    pageController.animateToPage(2,
+                        duration: const Duration(milliseconds: 500),
+                        curve: Curves.ease);
+                  });
+                },
+                child: Text(
+                  'View all',
+                  style: TextStyle(
+                      // color: complementColor(),
+                      color: accentColor(),
+                      fontFamily: 'Space',
+                      fontSize: 15,
+                      fontWeight: FontWeight.w900),
+                ),
               ),
-              trailing: FittedBox(
-                fit: BoxFit.contain,
-                // width: 80,
-                // height: 50,
-                // color: Colors.blue,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: const [
-                    Icon(
-                      FontAwesomeIcons.plus,
-                      color: Color(0xe60fb022),
-                      size: 12,
-                    ),
-                    Text(
-                      ' ₹ 100',
-                      style: TextStyle(
-                          fontSize: 15,
-                          color: Color(0xe60fb022),
-                          fontFamily: 'Space',
-                          fontWeight: FontWeight.w900),
+            ],
+          ),
+        ),
+        Container(
+          margin: const EdgeInsets.only(left: 25.0, right: 25.0),
+          // height: 300,
+
+          // width: 350,
+          // decoration: BoxDecoration(
+          //   borderRadius: const BorderRadius.all(Radius.circular(8)),
+          //   border: Border.all(
+          //     color: const Color(0xffe0c2a4),
+          //     width: .5,
+          //   ),
+          //   //color: Colors.white
+          //   // color: const Color(0xfff8e0bf),
+          //   // border: ,
+          // ),
+          child: ListView.builder(
+            padding: const EdgeInsets.only(top: 15.0, bottom: 0),
+            shrinkWrap: true,
+            physics: const BouncingScrollPhysics(),
+            itemBuilder: (context, index) {
+              return Container(
+                margin: const EdgeInsets.only(top: 10, bottom: 10),
+                padding: const EdgeInsets.fromLTRB(0, 12, 0, 13),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  color: Colors.white,
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Color(0xffe1e1e1),
+                      blurRadius: 40,
+                      // spreadRadius: 5
                     )
                   ],
                 ),
-              ),
-              // onTap: () => setState(() {
-              //   //usr_name = names[index];
-              // }),
-              // child: Column(
-              //   crossAxisAlignment: CrossAxisAlignment.center,
-              //   mainAxisAlignment: MainAxisAlignment.center,
-              //   children: [
-              //     const SizedBox(
-              //       height: 50,
-              //       width: 50,
-              //       // child: Image.asset(
-              //       //     'assets/images/user_icon_5.png')
-              //       child: CircleAvatar(
-              //         backgroundColor: Color(0xffe7cebc),
-              //         // backgroundImage: AssetImage('assets/images/Adit.jpg'),
-              //       ),
-              //     ),
-              //     Padding(
-              //       padding: const EdgeInsets.all(8.0),
-              //       child: Text(
-              //         names[index],
-              //         style: const TextStyle(
-              //             fontSize: 12,
-              //             color: Colors.black54,
-              //             // backgroundColor: Colors.yellow,
-              //             fontWeight: FontWeight.w700),
-              //       ),
-              //     )
-              //   ],
-              // ),
-            ),
-          );
-        },
-        itemCount: 4,
-      ),
+                child: ListTile(
+                  onTap: () => ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                          content: Text(
+                              'Payment Page is Opening for ${names[index]}'))),
+                  leading: CircleAvatar(
+                    radius: 28,
+                    backgroundColor: Colors.grey.shade200,
+                    // backgroundImage: AssetImage('assets/images/Adit.jpg'),
+                  ),
+                  title: Text(
+                    names[index],
+                    style: TextStyle(
+                        color: primaryColor(),
+                        fontFamily: 'Space',
+                        fontSize: 15,
+                        fontWeight: FontWeight.w900),
+                  ),
+                  subtitle: Text(
+                    '12:00 AM - Payment Recieved',
+                    style: TextStyle(
+                        color: complementColor(),
+                        fontFamily: 'Space',
+                        fontSize: 11,
+                        fontWeight: FontWeight.w900),
+                  ),
+                  trailing: FittedBox(
+                    fit: BoxFit.contain,
+                    // width: 80,
+                    // height: 50,
+                    // color: Colors.blue,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: const [
+                        Icon(
+                          FontAwesomeIcons.plus,
+                          color: Color(0xe60fb022),
+                          size: 12,
+                        ),
+                        Text(
+                          ' ₹ 100',
+                          style: TextStyle(
+                              fontSize: 15,
+                              color: Color(0xe60fb022),
+                              fontFamily: 'Space',
+                              fontWeight: FontWeight.w900),
+                        )
+                      ],
+                    ),
+                  ),
+                  // onTap: () => setState(() {
+                  //   //usr_name = names[index];
+                  // }),
+                  // child: Column(
+                  //   crossAxisAlignment: CrossAxisAlignment.center,
+                  //   mainAxisAlignment: MainAxisAlignment.center,
+                  //   children: [
+                  //     const SizedBox(
+                  //       height: 50,
+                  //       width: 50,
+                  //       // child: Image.asset(
+                  //       //     'assets/images/user_icon_5.png')
+                  //       child: CircleAvatar(
+                  //         backgroundColor: Color(0xffe7cebc),
+                  //         // backgroundImage: AssetImage('assets/images/Adit.jpg'),
+                  //       ),
+                  //     ),
+                  //     Padding(
+                  //       padding: const EdgeInsets.all(8.0),
+                  //       child: Text(
+                  //         names[index],
+                  //         style: const TextStyle(
+                  //             fontSize: 12,
+                  //             color: Colors.black54,
+                  //             // backgroundColor: Colors.yellow,
+                  //             fontWeight: FontWeight.w700),
+                  //       ),
+                  //     )
+                  //   ],
+                  // ),
+                ),
+              );
+            },
+            itemCount: 3,
+          ),
+        ),
+      ],
     );
   }
 }

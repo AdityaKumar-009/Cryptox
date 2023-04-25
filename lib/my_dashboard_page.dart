@@ -1,5 +1,4 @@
 import 'package:awesome_bottom_bar/awesome_bottom_bar.dart';
-import 'package:cryptoX/WalletCreation.dart';
 import 'package:cryptoX/pages/crypto_market_page.dart';
 import 'package:cryptoX/pages/setting_page.dart';
 import 'package:cryptoX/pages/transaction_history_page.dart';
@@ -7,15 +6,13 @@ import 'package:cryptoX/pages/wallet_homepage.dart';
 import 'package:cryptoX/profilepage.dart';
 import 'package:flutter/material.dart';
 import 'package:cryptoX/Scan2Pay.dart';
-import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'apptheme/theme.dart';
-import 'confirmSeed.dart';
 
-List names = [
+List<String> names = [
   'Ayan Basu',
   'Prince Makkar',
   'Vidyanshu',
@@ -25,19 +22,19 @@ List names = [
   'Rahul'
 ]; //For Storing all the User's Name
 
-const List<TabItem> items = [
+const List<TabItem> navItems = [
   TabItem(
     icon: FontAwesomeIcons.wallet,
     title: 'Wallet',
   ),
   TabItem(
-    icon: FontAwesomeIcons.receipt,
-    title: 'History',
+    icon: FontAwesomeIcons.chartLine,
+    title: 'Market',
   ),
   TabItem(icon: Icons.expand_less_rounded),
   TabItem(
-    icon: FontAwesomeIcons.chartLine,
-    title: 'Market',
+    icon: FontAwesomeIcons.receipt,
+    title: 'History',
   ),
   TabItem(
     icon: FontAwesomeIcons.gear,
@@ -45,7 +42,10 @@ const List<TabItem> items = [
   ),
 ];
 
-String userName = 'Aditya Kumar'; //For current User Name
+String userName = 'Aditya Kumar'; //For current User Name fetched from DataBase
+
+int currentIndex = 0;
+final PageController pageController = PageController(initialPage: 0);
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({super.key}) {
@@ -63,7 +63,7 @@ class MyHomePageState extends State<MyHomePage>
   String? myAddress;
   static const String IS_CREATED = 'isWalletCreated';
   static const String PUBLICADDRESS = 'PublicKey';
-  late final AnimationController _controller = AnimationController(
+  late final AnimationController _animController = AnimationController(
     animationBehavior: AnimationBehavior.preserve,
     vsync: this,
     duration: const Duration(
@@ -73,21 +73,18 @@ class MyHomePageState extends State<MyHomePage>
 
   @override
   void dispose() {
-    _controller.dispose();
+    _animController.dispose();
     super.dispose();
   }
 
   @override
   void initState() {
     Future.delayed(const Duration(milliseconds: 500), () {
-      _controller.forward();
+      _animController.forward();
     });
     isWalletCreated();
     super.initState();
   }
-
-  int currentIndex = 0;
-  PageController _pageController = PageController(initialPage: 0);
 
   @override
   Widget build(BuildContext context) {
@@ -135,17 +132,22 @@ class MyHomePageState extends State<MyHomePage>
                 ),
               ),
               Container(
+                color: Colors.white,
                 // width: 100,
-                margin: const EdgeInsets.only(top: 30, bottom: 15, right: 5),
-                child: const Card(
-                  shape: CircleBorder(),
-                  elevation: 0,
-                  // shadowColor: Colors,
-                  child: CircleAvatar(
-                    backgroundColor: Color.fromARGB(100, 0, 90, 100),
-                    // backgroundColor: Colors.transparent,
-                    backgroundImage: AssetImage('assets/images/Adit.jpg'),
-                    maxRadius: 25,
+                margin: const EdgeInsets.only(top: 30, bottom: 15, right: 10),
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => ProfilePage()));
+                  },
+                  child: const Hero(
+                    tag: 'profile',
+                    child: CircleAvatar(
+                      backgroundColor: Color.fromARGB(100, 0, 90, 100),
+                      // backgroundColor: Colors.transparent,
+                      backgroundImage: AssetImage('assets/images/Adit.jpg'),
+                      maxRadius: 25,
+                    ),
                   ),
                 ),
               ),
@@ -177,7 +179,7 @@ class MyHomePageState extends State<MyHomePage>
           child: Lottie.asset('assets/anim/qrScanner.json',
               // 'https://assets10.lottiefiles.com/packages/lf20_v3xtulro.json',
               // 'https://assets4.lottiefiles.com/packages/lf20_ncwesvwe.json',
-              controller: _controller),
+              controller: _animController),
           // Container(
           //   margin: const EdgeInsets.only(top: 15, bottom: 15),
           //   decoration: BoxDecoration(
@@ -211,7 +213,7 @@ class MyHomePageState extends State<MyHomePage>
               color: primaryColor()),
           // isFloating: true,
           borderRadius: BorderRadius.circular(16),
-          items: items,
+          items: navItems,
           // top: 100,
           // paddingVertical: 24,
           // backgroundColor: Colors.transparent,
@@ -231,7 +233,7 @@ class MyHomePageState extends State<MyHomePage>
             } else if (newIndex == 4) {
               newIndex = 3;
             }
-            _pageController.animateToPage(newIndex,
+            pageController.animateToPage(newIndex,
                 duration: const Duration(milliseconds: 500),
                 curve: Curves.ease);
           }),
@@ -354,7 +356,7 @@ class MyHomePageState extends State<MyHomePage>
         color: Colors.white,
         // color: primaryColor(),
         child: PageView(
-          controller: _pageController,
+          controller: pageController,
           onPageChanged: (newIndex) {
             setState(() {
               if (newIndex > 1 && newIndex < 4) {

@@ -1,4 +1,4 @@
-import 'package:cryptoX/MyDashBoardPage.dart';
+import 'package:cryptoX/my_dashboard_page.dart';
 import 'package:cryptoX/secret_keys.dart';
 import 'package:cryptoX/seedonQR.dart';
 import 'package:flutter/material.dart';
