@@ -48,8 +48,6 @@ class _KeyGenState extends State<KeyGen> with SingleTickerProviderStateMixin {
     setState(() {
       if (widget.privAddress!.isEmpty) {
         widget.privAddress = privateKey;
-      } else {
-        widget.privAddress = widget.privAddress;
       }
       widget.pubAddress = publicKey.toString();
       walletCreated();
