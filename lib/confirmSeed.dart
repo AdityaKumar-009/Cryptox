@@ -44,6 +44,10 @@ class _ConfirmSeedState extends State<ConfirmSeed> {
   int count = 0;
   List<TextEditingController> input = [];
 
+  Color txtColor = Colors.blueGrey;
+
+  bool enbld = true;
+
   @override
   void initState() {
     for (int i = 0; i < 12; i++) {
@@ -168,14 +172,17 @@ class _ConfirmSeedState extends State<ConfirmSeed> {
                               res!; //Using Not symbol [ ! ] after variable means it will not be null.
                           for (int i = 0; i < 12; i++) {
                             input[i].text = widget.qr_t12words[i];
+                            if (widget.page == 'restore') {
+                              ++count;
+                              enbld = false;
+                              // txtColor = accentColor();
+                            }
                           }
                           //For comparing two list basically ----------->
                           Function deepEq =
                               const DeepCollectionEquality().equals;
                           if (deepEq(widget.qr_t12words, widget.t12words)) {
                             count = 12;
-                          } else {
-                            count = 0;
                           }
                           print(
                               'RESULT FROM QR PAGE-------------> ${widget.qr_t12words}');
@@ -246,13 +253,41 @@ class _ConfirmSeedState extends State<ConfirmSeed> {
                     ),
                     onPressed: ((count == 12 ||
                             widget.privAddress
-                                .isEmpty)) //---------------------------
+                                .isNotEmpty)) //---------------------------
                         ? () {
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        KeyGen(widget.words)));
+                            if (widget.page == "create") {
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => KeyGen(
+                                            seed: widget.words,
+                                          )));
+                            } else if (widget.page == "restore") {
+                              if (widget.privAddress.isNotEmpty) {
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => KeyGen(
+                                              privateKey: widget.privAddress,
+                                              Page: 'restore',
+                                            )));
+                              } else {
+                                String qrWords = '';
+                                for (int i = 0;
+                                    i < widget.qr_t12words.length;
+                                    i++) {
+                                  qrWords += widget.qr_t12words[i].toString();
+                                  qrWords += ' ';
+                                }
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => KeyGen(
+                                              seed: qrWords.trimRight(),
+                                              Page: 'restore',
+                                            )));
+                              }
+                            }
                           }
                         : null
                     // ScaffoldMessenger.of(context)
@@ -451,7 +486,10 @@ class _ConfirmSeedState extends State<ConfirmSeed> {
                                                 ],
                                               ),
                                               child: TextField(
+                                                enabled: enbld,
                                                 autocorrect: false,
+                                                textInputAction:
+                                                    TextInputAction.next,
                                                 controller: input[index],
                                                 style: TextStyle(
                                                   fontSize: 15,
@@ -460,23 +498,28 @@ class _ConfirmSeedState extends State<ConfirmSeed> {
                                                   color:
                                                       (widget.page == 'create')
                                                           ? Colors.red
-                                                          : Colors.blueGrey,
+                                                          : txtColor,
                                                   // color: Color(0xff9d5454)
                                                 ),
                                                 onChanged: (txt) {
                                                   if (txt ==
                                                       widget.t12words[index]) {
                                                     // input[index].text = txt;
-
                                                     //if [entered text] equals [12 Worded List at that index] are same
                                                     print(
                                                         'At index ${index} Condition is true!');
                                                     setState(() {
                                                       //call the setState() which will rebuild again the GridView.builder widget
-                                                      cndtn[index] =
-                                                          1; //with the new cndtn value at that index as 1 which was previously 0
+                                                      cndtn[index] = 1;
+                                                      //with the new cndtn value at that index as 1 which was previously 0
                                                       count++;
                                                     }); //means again the index iterate from start ie. 0 to 11
+                                                  }
+                                                },
+                                                onSubmitted: (txt) {
+                                                  if (widget.page ==
+                                                      'restore') {
+                                                    input[index].text = txt;
                                                   }
                                                 },
                                                 textAlign: TextAlign.center,
@@ -503,6 +546,13 @@ class _ConfirmSeedState extends State<ConfirmSeed> {
                                                     // color: Colors.blueGrey
                                                     // color: Color(0xff9d5454)
                                                   ),
+                                                  disabledBorder:
+                                                      const OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(8)),
+                                                    borderSide: BorderSide.none,
+                                                  ),
                                                   enabledBorder:
                                                       const OutlineInputBorder(
                                                     borderRadius:
@@ -511,7 +561,7 @@ class _ConfirmSeedState extends State<ConfirmSeed> {
                                                     borderSide: BorderSide.none,
                                                   ),
                                                   // filled: true,
-                                                  fillColor: rtxtBG,
+                                                  // fillColor: rtxtBG,
                                                   focusedBorder:
                                                       OutlineInputBorder(
                                                     borderRadius:

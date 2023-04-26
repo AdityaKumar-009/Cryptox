@@ -7,14 +7,20 @@ import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:vibration/vibration.dart';
+import 'package:web3dart/credentials.dart';
 
 import 'apptheme/theme.dart';
 
 class KeyGen extends StatefulWidget {
-  String? seedPhrase;
-
-  KeyGen(String seed, {super.key}) {
+  String seedPhrase = '';
+  String? pubAddress;
+  String? privAddress;
+  String page = 'create';
+  KeyGen(
+      {String seed = '', String privateKey = '', String Page = '', super.key}) {
     seedPhrase = seed;
+    privAddress = privateKey;
+    page = Page;
   }
 
   @override
@@ -23,20 +29,29 @@ class KeyGen extends StatefulWidget {
 
 class _KeyGenState extends State<KeyGen> with SingleTickerProviderStateMixin {
   WalletAddress service = WalletAddress();
-  String? pubAddress;
-  String? privAddress;
+
   static AudioPlayer player = AudioPlayer();
 
   generate() async {
     WalletAddress service = WalletAddress();
 
-    final privateKey = await service.getPrivateKey(widget
-        .seedPhrase!); //Using Not symbol [ ! ] after variable means it will not be null.
-    final publicKey = await service.getPublicKey(privateKey);
+    String privateKey = '';
+    EthereumAddress? publicKey;
+    if (widget.seedPhrase.isNotEmpty) {
+      privateKey = await service.getPrivateKey(widget.seedPhrase);
+      publicKey = await service.getPublicKey(widget.privAddress!);
+    } else if (widget.privAddress!.isNotEmpty) {
+      publicKey = await service.getPublicKey(widget.privAddress!);
+    }
+    //Using Not symbol [ ! ] after variable means it will not be null.
 
     setState(() {
-      privAddress = privateKey;
-      pubAddress = publicKey.toString();
+      if (widget.privAddress!.isEmpty) {
+        widget.privAddress = privateKey;
+      } else {
+        widget.privAddress = widget.privAddress;
+      }
+      widget.pubAddress = publicKey.toString();
       walletCreated();
     });
   }
@@ -60,22 +75,23 @@ class _KeyGenState extends State<KeyGen> with SingleTickerProviderStateMixin {
     player.play();
   }
 
-  vibrate() async {
-    if (await Vibration.hasVibrator() == true) {
-      print('VIBRATION STARTED-----------------------------.');
-      if (await Vibration.hasAmplitudeControl() == true) {
-        if (await Vibration.hasCustomVibrationsSupport() == true) {
-          Vibration.vibrate(amplitude: 500, duration: 1000);
-        }
-      } else {
-        Vibration.vibrate();
-      }
-    }
-  }
+  // vibrate() async {
+  //   if (await Vibration.hasVibrator() == true) {
+  //     print('VIBRATION STARTED-----------------------------.');
+  //     if (await Vibration.hasAmplitudeControl() == true) {
+  //       if (await Vibration.hasCustomVibrationsSupport() == true) {
+  //         Vibration.vibrate(amplitude: 500, duration: 1000);
+  //       }
+  //     } else {
+  //       Vibration.vibrate();
+  //     }
+  //   }
+  // }
 
   @override
   void initState() {
-    vibrate();
+    print('PRIVATE KERY FROM RESTORE PAGE --------->${widget.privAddress}');
+    // vibrate();
     playTune();
     Future.delayed(const Duration(milliseconds: 500), () {
       _controller.forward();
@@ -95,9 +111,10 @@ class _KeyGenState extends State<KeyGen> with SingleTickerProviderStateMixin {
         //       Navigator.of(context).pop();
         //     },
         //     icon: const Icon(FontAwesomeIcons.close)),
-        title: const Text('WALLET CREATED',
+        title: Text(
+            (widget.page == 'create') ? 'WALLET CREATED' : 'WALLET RESTORED',
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: const TextStyle(
                 fontSize: 30,
                 fontFamily: 'Space',
                 // color: Color.fromARGB(255, 71, 217, 204),
@@ -143,9 +160,12 @@ class _KeyGenState extends State<KeyGen> with SingleTickerProviderStateMixin {
                           Container(
                             width: 270,
                             margin: const EdgeInsets.only(left: 15),
-                            child: const Text('WALLET INITIATED SUCCESSFULLY !',
+                            child: Text(
+                                (widget.page == 'create')
+                                    ? 'WALLET INITIATED SUCCESSFULLY !'
+                                    : 'WALLET RESTORED SUCCESSFULLY !',
                                 textAlign: TextAlign.center,
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontSize: 20,
                                     fontFamily: 'Space',
                                     color: Color(0xff2CDA94),
@@ -189,7 +209,7 @@ class _KeyGenState extends State<KeyGen> with SingleTickerProviderStateMixin {
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
-                                "$privAddress",
+                                "${widget.privAddress}",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     fontSize: 10,
@@ -223,7 +243,7 @@ class _KeyGenState extends State<KeyGen> with SingleTickerProviderStateMixin {
                             ),
                           ),
                           Center(
-                            child: Text("$pubAddress",
+                            child: Text("${widget.pubAddress}",
                                 style: TextStyle(
                                     fontSize: 10,
                                     fontFamily: 'Space',
@@ -248,40 +268,44 @@ class _KeyGenState extends State<KeyGen> with SingleTickerProviderStateMixin {
                     margin: const EdgeInsets.all(20),
                     width: 200,
                     // height: 60,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        elevation: 0,
-                        // backgroundColor: const Color(0xff1e1e1e),
-                        backgroundColor: Colors.red,
-                        shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(8))),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: const [
-                          Icon(Icons.enhanced_encryption_rounded),
-                          Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Text(
-                              'Encrypt | Export\nPrivate Key',
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  fontFamily: 'Space',
-                                  fontWeight: FontWeight.w600),
+                    child: (widget.page != 'restore')
+                        ? ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              elevation: 0,
+                              // backgroundColor: const Color(0xff1e1e1e),
+                              backgroundColor: Colors.red,
+                              shape: const RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(8))),
                             ),
-                          ),
-                        ],
-                      ),
-                      onPressed: () async {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => SeedonQR(
-                                      privKey: privAddress.toString(),
-                                      page: 2,
-                                    )));
-                      },
-                    ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: const [
+                                Icon(Icons.enhanced_encryption_rounded),
+                                Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Text(
+                                    'Encrypt | Export\nPrivate Key',
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        fontFamily: 'Space',
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            onPressed: () async {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => SeedonQR(
+                                            privKey:
+                                                widget.privAddress.toString(),
+                                            page: 2,
+                                          )));
+                            },
+                          )
+                        : const SizedBox(),
                   ),
                   Container(
                     margin: const EdgeInsets.all(20),
@@ -330,7 +354,8 @@ class _KeyGenState extends State<KeyGen> with SingleTickerProviderStateMixin {
     if (isC) {
       print('--------->_WALLET CREATED SUCCESSFULLY!');
     }
-    bool isP = await sp.setString(MyHomePageState.PUBLICADDRESS, pubAddress!);
+    bool isP =
+        await sp.setString(MyHomePageState.PUBLICADDRESS, widget.pubAddress!);
     if (isP) {
       print('------------->pubAddress CREATED SUCCESSFULLY!');
     }

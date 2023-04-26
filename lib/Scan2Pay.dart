@@ -17,6 +17,7 @@ class Scan2Pay extends StatefulWidget {
   Scan2Pay(int p, {super.key}) {
     page = p;
   }
+  int popupCount = 0;
 
   String? words;
   List tw = [];
@@ -134,7 +135,7 @@ class _Scan2PayState extends State<Scan2Pay>
                 left: 20,
                 child: InkWell(
                   onTap: () {
-                    Navigator.pop(context);
+                    Navigator.maybePop(context);
                   },
                   child: Container(
                     height: 40,
@@ -385,7 +386,7 @@ class _Scan2PayState extends State<Scan2Pay>
     controller.scannedDataStream.listen((scanData) {
       setState(() {
         result = scanData;
-
+        widget.popupCount++;
         if (result!.code != null && widget.page != 1) {
           decryptor(result, controller);
           // ScaffoldMessenger.of(context).removeCurrentSnackBar();
@@ -479,9 +480,7 @@ class _Scan2PayState extends State<Scan2Pay>
 
       var alertStyle = AlertStyle(
         animationType: AnimationType.grow,
-        // isCloseButton: false,
         isOverlayTapDismiss: false,
-
         descTextAlign: TextAlign.start,
         animationDuration: const Duration(milliseconds: 400),
         alertBorder: RoundedRectangleBorder(
@@ -500,7 +499,6 @@ class _Scan2PayState extends State<Scan2Pay>
         isOff = true;
       });
       // TextEditingController passwd = TextEditingController();
-
       // bool enabled = false;
       dynamic popup;
       popup = Alert(
@@ -588,13 +586,17 @@ class _Scan2PayState extends State<Scan2Pay>
                 }
                 widget.tw = lst;
                 popup.dismiss();
+                controller.pauseCamera();
+                setState(() {
+                  isOff = true;
+                });
                 if (widget.tw.length == 12) {
-                  Navigator.pop(context, widget.tw);
+                  Navigator.maybePop(context, widget.tw);
                 } else if (widget.page == 3 && widget.tw.length == 1) {
-                  controller.pauseCamera();
-                  setState(() {
-                    isOff = true;
-                  });
+                  // controller.pauseCamera();
+                  // setState(() {
+                  //   isOff = true;
+                  // });
                   Navigator.maybePop(context, widget.tw);
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -732,7 +734,9 @@ class _Scan2PayState extends State<Scan2Pay>
           ),
         ],
       );
-      popup.show();
+      if (widget.popupCount == 1) {
+        popup.show();
+      }
       // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       //   showCloseIcon: true,
       //   backgroundColor: Colors.red.shade700,
