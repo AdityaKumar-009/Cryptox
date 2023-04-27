@@ -45,14 +45,13 @@ const List<TabItem> navItems = [
 String userName = 'Aditya Kumar'; //For current User Name fetched from DataBase
 
 int currentIndex = 0;
-final PageController pageController = PageController(initialPage: 0);
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({super.key}) {
     //Used flag for changing states, if flag = 0 means keys are not created.
     //if flag is passed as 1 by another page (ie. KeyGeneration Page) then it shows the account balance info.
   }
-
+  PageController pageController = PageController(initialPage: 0);
   @override
   State<MyHomePage> createState() => MyHomePageState();
 }
@@ -233,7 +232,7 @@ class MyHomePageState extends State<MyHomePage>
             } else if (newIndex == 4) {
               newIndex = 3;
             }
-            pageController.animateToPage(newIndex,
+            widget.pageController.animateToPage(newIndex,
                 duration: const Duration(milliseconds: 500),
                 curve: Curves.ease);
           }),
@@ -356,7 +355,7 @@ class MyHomePageState extends State<MyHomePage>
         color: Colors.white,
         // color: primaryColor(),
         child: PageView(
-          controller: pageController,
+          controller: widget.pageController,
           onPageChanged: (newIndex) {
             setState(() {
               if (newIndex > 1 && newIndex < 4) {
@@ -368,7 +367,11 @@ class MyHomePageState extends State<MyHomePage>
           },
           physics: const BouncingScrollPhysics(),
           children: [
-            FirstPage(flag, myAddress),
+            FirstPage(
+              flag,
+              myAddress,
+              pc: widget.pageController,
+            ),
             const SecondPage(),
             const ThirdPage(),
             const FourthPage(),

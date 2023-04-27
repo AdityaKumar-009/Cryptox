@@ -13,10 +13,11 @@ import '../confirmSeed.dart';
 class FirstPage extends StatefulWidget {
   bool flag = false;
   String? MyAddress;
-
-  FirstPage(bool f, String? addr, {super.key}) {
+  PageController? pageController;
+  FirstPage(bool f, String? addr, {PageController? pc, super.key}) {
     flag = f;
     MyAddress = addr;
+    pageController = pc;
   }
   @override
   State<FirstPage> createState() => _FirstPageState();
@@ -34,7 +35,7 @@ class _FirstPageState extends State<FirstPage> {
               child: Column(
                 children: [
                   Balance(widget.flag, widget.MyAddress),
-                  const RecentTransaction(),
+                  RecentTransaction(widget.pageController!),
                 ],
               ))),
     );
@@ -504,7 +505,10 @@ class _BalanceState extends State<Balance> {
 // -------------------------------------------------------------
 //----------------------- RECENT TRANSACTION ------------------>
 class RecentTransaction extends StatefulWidget {
-  const RecentTransaction({super.key});
+  PageController? pageController;
+  RecentTransaction(PageController pc, {super.key}) {
+    pageController = pc;
+  }
 
   @override
   State<RecentTransaction> createState() => _RecentTransactionState();
@@ -532,7 +536,7 @@ class _RecentTransactionState extends State<RecentTransaction> {
               InkWell(
                 onTap: () {
                   setState(() {
-                    pageController.animateToPage(2,
+                    widget.pageController!.animateToPage(2,
                         duration: const Duration(milliseconds: 500),
                         curve: Curves.ease);
                   });

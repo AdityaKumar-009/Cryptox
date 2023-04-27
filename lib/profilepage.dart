@@ -18,8 +18,7 @@ class ProfilePage extends StatefulWidget {
   State<ProfilePage> createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage>
-    with SingleTickerProviderStateMixin {
+class _ProfilePageState extends State<ProfilePage> {
   fetch() async {
     SharedPreferences sp = await SharedPreferences.getInstance();
     setState(() {
@@ -27,23 +26,10 @@ class _ProfilePageState extends State<ProfilePage>
     });
   }
 
-  late final AnimationController _animController =
-      AnimationController(vsync: this, duration: const Duration(seconds: 8));
-
   @override
   void initState() {
     fetch();
-    _animController.forward();
-    Future.delayed(const Duration(seconds: 5), () {
-      _animController.stop();
-    });
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    _animController.dispose();
-    super.dispose();
   }
 
   @override
@@ -141,7 +127,7 @@ class _ProfilePageState extends State<ProfilePage>
                           Positioned(
                             left: 0,
                             right: 0,
-                            top: 45,
+                            top: (widget.pubKey == null) ? 34 : 94,
                             child: (widget.pubKey != null)
                                 ? Column(
                                     mainAxisAlignment:
@@ -304,15 +290,16 @@ class _ProfilePageState extends State<ProfilePage>
                                           padding: const EdgeInsets.only(
                                               left: 50,
                                               right: 50,
-                                              top: 80,
-                                              bottom: 20),
-                                          child: Lottie.network(
-                                            // 'https://assets1.lottiefiles.com/packages/lf20_ZzPRr9.json',
-                                            'https://assets10.lottiefiles.com/packages/lf20_O1b0iWuPju.json',
-                                            // 'https://assets10.lottiefiles.com/packages/lf20_NODCLWy3iX.json',
-                                            // 'assets/anim/no-profile.json',
-                                            // controller: _animController,
-                                          ),
+                                              top: 15,
+                                              bottom: 32),
+                                          child: Lottie.asset(
+                                              'assets/anim/Wallet.json',
+                                              // 'https://assets1.lottiefiles.com/packages/lf20_ZzPRr9.json',
+                                              // 'https://assets10.lottiefiles.com/packages/lf20_O1b0iWuPju.json',
+                                              // 'https://assets10.lottiefiles.com/packages/lf20_NODCLWy3iX.json',
+                                              // 'assets/anim/no-profile.json',
+                                              // controller: _animController,
+                                              width: 350),
                                         ),
                                         Icon(
                                           FontAwesomeIcons.triangleExclamation,

@@ -39,7 +39,7 @@ class _KeyGenState extends State<KeyGen> with SingleTickerProviderStateMixin {
     EthereumAddress? publicKey;
     if (widget.seedPhrase.isNotEmpty) {
       privateKey = await service.getPrivateKey(widget.seedPhrase);
-      publicKey = await service.getPublicKey(widget.privAddress!);
+      publicKey = await service.getPublicKey(privateKey);
     } else if (widget.privAddress!.isNotEmpty) {
       publicKey = await service.getPublicKey(widget.privAddress!);
     }
@@ -88,12 +88,13 @@ class _KeyGenState extends State<KeyGen> with SingleTickerProviderStateMixin {
 
   @override
   void initState() {
-    print('PRIVATE KERY FROM RESTORE PAGE --------->${widget.privAddress}');
+    print('PRIVATE KEY FROM RESTORE PAGE --------->${widget.privAddress}');
     // vibrate();
     playTune();
     Future.delayed(const Duration(milliseconds: 500), () {
       _controller.forward();
     });
+    print('WORDS FROM WALLET CREATION PAGE --------->${widget.seedPhrase}');
     generate();
     super.initState();
   }

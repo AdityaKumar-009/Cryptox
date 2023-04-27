@@ -255,7 +255,7 @@ class _ConfirmSeedState extends State<ConfirmSeed> {
                             widget.privAddress
                                 .isNotEmpty)) //---------------------------
                         ? () {
-                            if (widget.page == "create") {
+                            if (widget.page != "restore") {
                               Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(

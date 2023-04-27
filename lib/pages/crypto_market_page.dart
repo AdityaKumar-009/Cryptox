@@ -15,9 +15,8 @@ class _SecondPageState extends State<SecondPage> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Lottie.network(
-            // 'assets/anim/market.lottie',
-            'https://assets1.lottiefiles.com/packages/lf20_yMpiqXia1k.json', //STOCKS
+        Lottie.asset('assets/anim/market.json',
+            // 'https://assets1.lottiefiles.com/packages/lf20_yMpiqXia1k.json', //STOCKS
             // 'https://assets9.lottiefiles.com/private_files/lf30_jspeqlsz.json', //CRYPTO LOADING
             // 'https://assets10.lottiefiles.com/packages/lf20_pmyyjcm7.json', //Crypto Stocks
             width: 250),
