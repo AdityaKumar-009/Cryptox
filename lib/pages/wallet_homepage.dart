@@ -359,7 +359,7 @@ class _BalanceState extends State<Balance> {
                           children: [
                             Positioned(
                               // top: 16,
-                              top: -15,
+                              top: -25,
                               // right: -50,
                               right: -5,
                               child: Lottie.asset(
@@ -388,7 +388,7 @@ class _BalanceState extends State<Balance> {
                               ),
                             ),
                             Positioned(
-                              top: 50,
+                              top: 45,
                               left: 40,
                               child: ElevatedButton(
                                 onPressed: () {
@@ -439,7 +439,7 @@ class _BalanceState extends State<Balance> {
                               ),
                             ),
                             Positioned(
-                              bottom: 30,
+                              bottom: 45,
                               left: 40,
                               child: ElevatedButton(
                                 onPressed: () {

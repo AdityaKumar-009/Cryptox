@@ -298,8 +298,7 @@ class _KeyGenState extends State<KeyGen> with SingleTickerProviderStateMixin {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => SeedonQR(
-                                            privKey:
-                                                widget.privAddress.toString(),
+                                            privKey: widget.privAddress!,
                                             page: 2,
                                           )));
                             },

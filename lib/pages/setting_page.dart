@@ -114,6 +114,8 @@ class _FourthPageState extends State<FourthPage> {
               ),
               title: const Text('Appearance',
                   style: TextStyle(fontFamily: 'Space', fontSize: 18)),
+              subtitle: const Text('Light',
+                  style: TextStyle(fontFamily: 'Space', fontSize: 12)),
               trailing: const Padding(
                 padding: EdgeInsets.only(right: 10),
                 child: Icon(

@@ -127,7 +127,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           Positioned(
                             left: 0,
                             right: 0,
-                            top: (widget.pubKey == null) ? 34 : 94,
+                            top: 94,
                             child: (widget.pubKey != null)
                                 ? Column(
                                     mainAxisAlignment:
@@ -313,10 +313,11 @@ class _ProfilePageState extends State<ProfilePage> {
                                             'Wallet not found!',
                                             textAlign: TextAlign.justify,
                                             style: TextStyle(
-                                                fontFamily: 'Space',
-                                                fontWeight: FontWeight.w600,
-                                                fontSize: 16,
-                                                color: complementColor()),
+                                              fontFamily: 'Space',
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 16,
+                                              color: Colors.red.shade500,
+                                            ),
                                           ),
                                         ),
                                         Padding(

@@ -182,7 +182,7 @@ class _SeedonQRState extends State<SeedonQR> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => CloudUpload(
-                                              privKey.toString(),
+                                              privKey: privKey!,
                                             )));
                               },
                             ),

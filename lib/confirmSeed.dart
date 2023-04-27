@@ -14,7 +14,7 @@ class ConfirmSeed extends StatefulWidget {
   List qr_t12words = [];
   int flag = 0;
   String page = '';
-  String privAddress = '';
+  String? privAddress;
 
   ConfirmSeed(
       {String wrds_qr = '',
@@ -220,7 +220,7 @@ class _ConfirmSeedState extends State<ConfirmSeed> {
                             ),
                           ],
                         ),
-                        onPressed: () {
+                        onPressed: () async {
                           // String? privKey;
                           // if (option == 'default') {
                           //   privKey = widget.doEncryption();
@@ -228,12 +228,18 @@ class _ConfirmSeedState extends State<ConfirmSeed> {
                           //   privKey =
                           //       widget.doEncryption(key: custom_key);
                           // }
-                          Navigator.push(
+
+                          final result = await Navigator.push<String>(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => CloudUpload(
-                                        widget.privAddress,
+                                        page: 'import_from_db',
                                       )));
+                          if (result != null) {
+                            setState(() {
+                              widget.privAddress = result;
+                            });
+                          }
                         },
                       ),
                     )
@@ -252,8 +258,8 @@ class _ConfirmSeedState extends State<ConfirmSeed> {
                       ),
                     ),
                     onPressed: ((count == 12 ||
-                            widget.privAddress
-                                .isNotEmpty)) //---------------------------
+                            widget.privAddress !=
+                                null)) //---------------------------
                         ? () {
                             if (widget.page != "restore") {
                               Navigator.pushReplacement(
@@ -263,12 +269,12 @@ class _ConfirmSeedState extends State<ConfirmSeed> {
                                             seed: widget.words,
                                           )));
                             } else if (widget.page == "restore") {
-                              if (widget.privAddress.isNotEmpty) {
+                              if (widget.privAddress != null) {
                                 Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => KeyGen(
-                                              privateKey: widget.privAddress,
+                                              privateKey: widget.privAddress!,
                                               Page: 'restore',
                                             )));
                               } else {
@@ -599,7 +605,7 @@ class _ConfirmSeedState extends State<ConfirmSeed> {
                                     fontWeight: FontWeight.w600)),
                           )
                         : const SizedBox(),
-                    (widget.privAddress.isNotEmpty)
+                    (widget.privAddress != null)
                         // true
                         ? Column(
                             children: [
@@ -640,7 +646,7 @@ class _ConfirmSeedState extends State<ConfirmSeed> {
                                       const Divider(),
                                       Center(
                                         child: Text(
-                                          widget.privAddress,
+                                          widget.privAddress!,
                                           textAlign: TextAlign.center,
                                           style: const TextStyle(
                                               fontSize: 15,

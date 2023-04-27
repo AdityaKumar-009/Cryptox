@@ -4,33 +4,19 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lottie/lottie.dart';
 
 class CloudUpload extends StatefulWidget {
-  String privKey = '';
-
-  CloudUpload(String privateKey, {super.key}) {
-    privKey = privateKey;
+  String privateKey = '';
+  String Page = '';
+  CloudUpload({String privKey = '', String page = 'export_to_db', super.key}) {
+    privateKey = privKey;
+    Page = page;
   }
 
   @override
   State<CloudUpload> createState() => _CloudUploadState();
 }
 
-class _CloudUploadState extends State<CloudUpload>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _controller =
-      AnimationController(vsync: this, duration: const Duration(seconds: 5));
-
+class _CloudUploadState extends State<CloudUpload> {
   String? encryptedVal;
-  @override
-  void initState() {
-    _controller.forward();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
 
   // String? decryptedVal;
   @override
@@ -44,9 +30,10 @@ class _CloudUploadState extends State<CloudUpload>
         //       Navigator.of(context).pop();
         //     },
         //     icon: const Icon(FontAwesomeIcons.close)),
-        title: const Text('CLOUD STORE',
+        title: Text(
+            (widget.Page != 'import_from_db') ? 'CLOUD STORE' : 'CLOUD RESTORE',
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: const TextStyle(
                 fontSize: 30,
                 fontFamily: 'Space',
                 // color: Color.fromARGB(255, 71, 217, 204),
@@ -114,10 +101,21 @@ class _CloudUploadState extends State<CloudUpload>
                           ),
                         ],
                       ),
-                      onPressed: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text('Uploading on Google Drive')));
+                      onPressed: () async {
+                        if (widget.Page == 'export_to_db') {
+                          //
+                          // LOGIC TO EXPORT / UPLOAD ENCRYPTED PRIVATE KEY IN A FILE TO THE
+                          //
+                        } else {
+                          //
+                          // LOGIC TO IMPORT BACK ENCRYPTED PRIVATE KEY FROM A FILE STORED IN THAT GOOGLE DRIVE AND
+                          // SHOW THE POPUP (IF ENCRYPTED USING CUSTOM PASSWORD)
+                          // TO ENTER THE PASSWORD FOR DECRYPTION AND POP THE PAGE WITH RETURNING THAT PRIVATE KEY STRING
+                          //
+                        }
+                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                            content: Text(
+                                'Exporting or importing from Google Drive method is called!')));
                       },
                     ),
                   ),
@@ -154,11 +152,21 @@ class _CloudUploadState extends State<CloudUpload>
                             ),
                           ],
                         ),
-                        onPressed: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                  content:
-                                      Text('Uploading on FireBase Store')));
+                        onPressed: () async {
+                          if (widget.Page == 'export_to_db') {
+                            //
+                            // LOGIC TO EXPORT / UPLOAD ENCRYPTED PRIVATE KEY IN A FILE TO THE FIRESTORE CLOUD
+                            //
+                          } else {
+                            //
+                            // LOGIC TO IMPORT BACK ENCRYPTED PRIVATE KEY FROM A FILE THAT WAS STORED IN THE FIRESTORE AND
+                            // SHOW THE POPUP TO ENTER THE PASSWORD
+                            //  (IF ENCRYPTED USING CUSTOM PASSWORD) FOR DECRYPTION AND POP THE PAGE WITH RETURNING THAT PRIVATE KEY STRING
+                            //
+                          }
+                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                              content: Text(
+                                  'Exporting or importing from FIRE STORE method is called!')));
                         },
                       ),
                     ),
