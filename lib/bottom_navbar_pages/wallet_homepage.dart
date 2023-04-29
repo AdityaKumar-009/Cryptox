@@ -2,23 +2,31 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lottie/lottie.dart';
-
 import '../my_dashboard_page.dart';
-import '../WalletCreation.dart';
-import '../apptheme/theme.dart';
-import '../confirmSeed.dart';
+import '../creation_restoration_pages/generate_seed_words.dart';
+import '../app_theme/theme.dart';
+import '../creation_restoration_pages/confirm_or_restore.dart';
+
+// FETCHING CRX AMOUNT BALANCE FROM ETHEREUM NETWORK
+double crxBalance = 100.00;
 
 // ============================= FIRST PAGE ======================================|
 
 class FirstPage extends StatefulWidget {
-  bool flag = false;
-  String? MyAddress;
-  PageController? pageController;
-  FirstPage(bool f, String? addr, {PageController? pc, super.key}) {
-    flag = f;
-    MyAddress = addr;
-    pageController = pc;
+  bool isWalletCreated = false;
+  String? myPublicAddress;
+  PageController? pageNavigationController;
+
+  FirstPage(
+      {required bool isCreated,
+      required String publicAddress,
+      PageController? pageController,
+      super.key}) {
+    isWalletCreated = isCreated;
+    myPublicAddress = publicAddress;
+    pageNavigationController = pageController;
   }
+
   @override
   State<FirstPage> createState() => _FirstPageState();
 }
@@ -26,32 +34,38 @@ class FirstPage extends StatefulWidget {
 class _FirstPageState extends State<FirstPage> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      // color: Colors.white,
-      child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Container(
-              height: 920,
+    return SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 50),
+          child: SizedBox(
+              // height: 920,
               child: Column(
-                children: [
-                  Balance(widget.flag, widget.MyAddress),
-                  RecentTransaction(widget.pageController!),
-                ],
-              ))),
-    );
+            children: [
+              Balance(widget.isWalletCreated, widget.myPublicAddress),
+              // ADD CONDITION TO SHOW THIS BELOW WIDGET WHEN TRANSACTION HISTORY LIST ITEMS > 0
+              RecentTransaction(widget.pageNavigationController!),
+              // ADD ASSET SECTION WHICH SHOWS 10 POPULAR ASSETS PRICES
+            ],
+          )),
+        ));
   }
 }
 
 // ==========================================================================|
 
 // ----------------------CONTAINERS ------------------------
-//----------------------- BALANCE ----------------------------->
+
+// ==>
+
+//----------------------- BALANCE -----------------------------=>
+
 class Balance extends StatefulWidget {
-  bool flag = false;
+  bool walletCreatedFlag = false;
   String? pubAddrs;
 
   Balance(bool f, String? addr, {super.key}) {
-    flag = f;
+    walletCreatedFlag = f;
     pubAddrs = addr;
   }
 
@@ -63,7 +77,8 @@ class _BalanceState extends State<Balance> {
   @override
   build(context) {
     return SizedBox(
-      child: (widget.flag == true)
+      child: (widget.walletCreatedFlag == true)
+          // IF WALLET CREATED THEN SHOWING AMOUNT
           ? SingleChildScrollView(
               clipBehavior: Clip.none,
               scrollDirection: Axis.horizontal,
@@ -73,7 +88,9 @@ class _BalanceState extends State<Balance> {
                 margin: const EdgeInsets.only(top: 30, bottom: 30),
                 height: 230,
                 child: Stack(
+                  // USED FOR DISPLAYING CUSTOM BACK SHADOW AND THE BALANCE CARD
                   children: [
+                    // BACK SHADOW
                     Positioned(
                       left: 37.5,
                       child: Container(
@@ -90,90 +107,59 @@ class _BalanceState extends State<Balance> {
                         ),
                       ),
                     ),
+                    // CONTAINER THAT SHOWS AMOUNT [ PLACED ABOVE THE BACK SHADOW ]
                     Container(
                       width: 350,
                       height: 220,
                       decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            // Color(0xffa8edea),
-                            // Color(0xfed6e3ff),
-                            // const Color(0xff0031c0),
-                            // accentColor(),
-                            const Color(0xff1f1f1f),
-                            primaryColor()
-                          ],
-                          begin: const Alignment(0.5, 0.0),
-                          end: const Alignment(0.5, 1.0),
-                        ),
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(16)),
-                        // border: Border.all(
-                        //   color: const Color(0xff093aa2),
-                        //   width: 1,
-                        // ),
-                      ),
+                          gradient: LinearGradient(
+                            colors: [const Color(0xff1f1f1f), primaryColor()],
+                            begin: const Alignment(0.5, 0.0),
+                            end: const Alignment(0.5, 1.0),
+                          ),
+                          borderRadius: round_16()),
                       child: Stack(
-                        clipBehavior: Clip.hardEdge,
-                        // mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Positioned(
-                            // top: 16,
                             top: 15,
-                            // right: -50,
                             right: 0,
-                            child: Lottie.asset(
+                            child: // LOTTIE ANIMATION PACKAGE FOR IMPORTING CUSTOM .JSON FILE ANIMATION
+                                Lottie.asset(
                               'assets/anim/ethereum.json',
-                              // 'assets/anim/no-wallet.json',
-                              // 'https://assets1.lottiefiles.com/packages/lf20_ZzPRr9.json',
-                              // width: 300,
                               width: 150,
                             ),
                           ),
-                          const Positioned(
+                          Positioned(
                             top: 0,
                             left: 5,
                             child: Padding(
-                              padding: EdgeInsets.all(25.0),
-                              child: Text(
-                                'Total Balance',
-                                style: TextStyle(
-                                  fontFamily: 'Space',
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 14,
-                                  color: Color(0xe6d5d5d5),
-                                  // color: Color(0xffd74444),
-                                ),
+                              padding: const EdgeInsets.all(25.0),
+                              child: text(
+                                'Available balance',
+                                color: const Color(0xe6d5d5d5),
+                                fontSize: 14,
                               ),
                             ),
                           ),
-                          const Positioned(
+                          Positioned(
                             top: 50,
                             left: 30,
                             child: Text(
-                              '₹ 10,000',
-                              style: TextStyle(
+                              '₹ ${crxBalance * 100}',
+                              style: const TextStyle(
                                   fontFamily: 'Space',
                                   fontSize: 35,
-                                  fontWeight: FontWeight.w900,
-                                  // color: Color.fromRGBO(248, 98, 66, 1.0),
-                                  color: Colors.white
-                                  // color: accentColor(),
-                                  ),
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.white),
                             ),
                           ),
-                          const Positioned(
+                          Positioned(
                             top: 115,
                             left: 30,
-                            child: Text(
+                            child: text(
                               'CRX Coins',
-                              style: TextStyle(
-                                fontFamily: 'Space',
-                                fontWeight: FontWeight.w500,
-                                fontSize: 14,
-                                color: Color(0xe6d5d5d5),
-                                // color: Color(0xff000000),
-                              ),
+                              color: const Color(0xe6d5d5d5),
+                              fontSize: 14,
                             ),
                           ),
                           Positioned(
@@ -188,16 +174,12 @@ class _BalanceState extends State<Balance> {
                                     'assets/images/ethereum-logo.png',
                                   ),
                                 ),
-                                const Text(
-                                  '100',
-                                  style: TextStyle(
-                                      fontFamily: 'Space',
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 15,
-                                      color: Colors.white
-                                      // color: Colors.orangeAccent,
-                                      ),
-                                ),
+                                text(
+                                  crxBalance.toString(),
+                                  color: Colors.white,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600,
+                                )
                               ],
                             ),
                           ),
@@ -213,13 +195,13 @@ class _BalanceState extends State<Balance> {
                                     showCloseIcon: true,
                                     backgroundColor: Colors.green.shade700,
                                     behavior: SnackBarBehavior.floating,
-                                    content: const Text(
-                                      'Copied to your clipboard !',
-                                      style: TextStyle(fontFamily: 'Space'),
+                                    content: text(
+                                      'Copied to clipboard!',
+                                      color: Colors.white,
+                                      fontSize: 14,
                                     ),
                                   ));
                                 });
-                                // copied successfully
                               },
                               child: Container(
                                 padding: const EdgeInsets.all(10),
@@ -238,65 +220,13 @@ class _BalanceState extends State<Balance> {
                                   style: const TextStyle(
                                     letterSpacing: 5,
                                     fontFamily: 'Space',
-                                    fontWeight: FontWeight.w900,
+                                    fontWeight: FontWeight.w700,
                                     fontSize: 18,
-                                    // color: complementColor()
-                                    // color: primaryColor()
                                     color: Color(0xff1f1f1f),
-
-                                    // color: Colors.white70
-                                    // color: Colors.orangeAccent,
                                   ),
                                 ),
                               ),
                             ),
-                            // child: ElevatedButton(
-                            //   onPressed: () {
-                            //     Navigator.push(
-                            //         context,
-                            //         MaterialPageRoute(
-                            //             builder: (context) =>
-                            //                 const WalletCreation()));
-                            //   },
-                            //   style: ElevatedButton.styleFrom(
-                            //       padding: EdgeInsets.zero,
-                            //       backgroundColor: const Color(0xe60fb022),
-                            //       shape: RoundedRectangleBorder(
-                            //         borderRadius: BorderRadius.circular(20),
-                            //       )),
-                            //   child: SizedBox(
-                            //     width: 120,
-                            //     child: Row(
-                            //       mainAxisAlignment:
-                            //           MainAxisAlignment.spaceEvenly,
-                            //       children: const [
-                            //         Icon(
-                            //           FontAwesomeIcons.download,
-                            //           // color: Colors.white70,
-                            //           color: Color(0xe6ffffff),
-                            //           //previous color
-                            //           // color: Color(0xff699bcb),
-                            //           size: 18,
-                            //         ),
-                            //         Text(
-                            //           'Restore',
-                            //           style: TextStyle(
-                            //             fontFamily: 'Space',
-                            //             fontWeight: FontWeight.w600,
-                            //             fontSize: 18,
-                            //             color: Color(0xe6ffffff),
-                            //             //Previous
-                            //             // color: Color(0xff699bcb)
-                            //             //red
-                            //             // color: Colors.white70
-                            //             // color: Color(0xffd74444)
-                            //             // color: Color(0xff0f87a2),
-                            //           ),
-                            //         ),
-                            //       ],
-                            //     ),
-                            //   ),
-                            // ),
                           )
                         ],
                       ),
@@ -304,7 +234,8 @@ class _BalanceState extends State<Balance> {
                   ],
                 ),
               ))
-          : SingleChildScrollView(
+          : // OTHERWISE DISPLAY CONTAINER THAT INCLUDES CREATE / RESTORE BUTTON
+          SingleChildScrollView(
               clipBehavior: Clip.none,
               scrollDirection: Axis.horizontal,
               physics: const BouncingScrollPhysics(
@@ -314,6 +245,7 @@ class _BalanceState extends State<Balance> {
                 margin: const EdgeInsets.only(top: 30, bottom: 30),
                 child: Stack(
                   children: [
+                    // BACK SHADOW
                     Positioned(
                       left: 37.5,
                       child: Container(
@@ -330,62 +262,41 @@ class _BalanceState extends State<Balance> {
                         ),
                       ),
                     ),
+                    // CREATE / RESTORE CONTAINER ABOVE SHADOW
                     Positioned(
                       child: Container(
                         width: 350,
                         height: 190,
-                        decoration: const BoxDecoration(
-                          gradient: LinearGradient(
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
                             colors: [
-                              // Color(0xffa8edea),
-                              // Color(0xfed6e3ff),
-                              // const Color(0xff0031c0),
-                              // primaryColor(),
-                              // const Color(0xff0e0e0e)
                               Color(0xffEECB6B),
                               Color(0xffD7AD38),
                             ],
                             begin: Alignment(0.5, 0.0),
                             end: Alignment(0.5, 1.0),
                           ),
-                          borderRadius: BorderRadius.all(Radius.circular(16)),
-                          // border: Border.all(
-                          //   color: const Color(0xff093aa2),
-                          //   width: 1,
-                          // ),
+                          borderRadius: round_16(),
                         ),
                         child: Stack(
-                          // mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Positioned(
-                              // top: 16,
                               top: -25,
-                              // right: -50,
                               right: -5,
                               child: Lottie.asset(
                                 'assets/anim/no-wallet.json',
-                                // 'https://assets1.lottiefiles.com/packages/lf20_ZzPRr9.json',
-                                // width: 300,
                                 width: 210,
                               ),
                             ),
                             Positioned(
-                              top: -10,
-                              left: 100,
-                              child: Padding(
-                                padding: const EdgeInsets.all(25.0),
-                                child: Text(
-                                  'No wallet found!',
-                                  style: TextStyle(
-                                    fontFamily: 'Space',
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 14,
-                                    color: primaryColor(),
-                                    // color: Color(0xccd5d5d5),
-                                    // color: Color(0xffd74444),
-                                  ),
-                                ),
-                              ),
+                              top: 12,
+                              left: 0,
+                              right: 0,
+                              child: text('No Wallet Found!',
+                                  color: primaryColor(),
+                                  fontSize: 14,
+                                  textAlign: TextAlign.center,
+                                  fontWeight: FontWeight.w400),
                             ),
                             Positioned(
                               top: 45,
@@ -396,7 +307,7 @@ class _BalanceState extends State<Balance> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              const WalletCreation()));
+                                              const GenerateSeedPhrases()));
                                 },
                                 style: ElevatedButton.styleFrom(
                                     padding: EdgeInsets.zero,
@@ -412,10 +323,7 @@ class _BalanceState extends State<Balance> {
                                     children: [
                                       Icon(
                                         FontAwesomeIcons.circlePlus,
-                                        // color: Colors.white70,
                                         color: primaryColor(),
-                                        //previous color
-                                        // color: Color(0xff699bcb),
                                         size: 18,
                                       ),
                                       Text(
@@ -425,12 +333,6 @@ class _BalanceState extends State<Balance> {
                                           fontWeight: FontWeight.w600,
                                           fontSize: 18,
                                           color: primaryColor(),
-                                          //Previous
-                                          // color: Color(0xff699bcb)
-                                          //red
-                                          // color: Colors.white70
-                                          // color: Color(0xffd74444)
-                                          // color: Color(0xff0f87a2),
                                         ),
                                       ),
                                     ],
@@ -502,10 +404,15 @@ class _BalanceState extends State<Balance> {
   }
 }
 
-// -------------------------------------------------------------
-//----------------------- RECENT TRANSACTION ------------------>
+// ------------------------------------------------------------=>
+
+// ==>
+
+//----------------------- RECENT TRANSACTION -----------------------=>
+
 class RecentTransaction extends StatefulWidget {
   PageController? pageController;
+
   RecentTransaction(PageController pc, {super.key}) {
     pageController = pc;
   }
@@ -519,19 +426,17 @@ class _RecentTransactionState extends State<RecentTransaction> {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        // CONTAINER FOR TEXTs : 'RECENT TRANSACTION' and 'View all'
         Container(
           width: double.infinity,
           margin: const EdgeInsets.only(left: 25, right: 25),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
+              text(
                 'Recent Transaction',
-                style: TextStyle(
-                    color: primaryColor(),
-                    fontFamily: 'Space',
-                    fontSize: 20,
-                    fontWeight: FontWeight.w900),
+                color: primaryColor(),
+                fontWeight: FontWeight.w900,
               ),
               InkWell(
                 onTap: () {
@@ -541,133 +446,70 @@ class _RecentTransactionState extends State<RecentTransaction> {
                         curve: Curves.ease);
                   });
                 },
-                child: Text(
+                child: text(
                   'View all',
-                  style: TextStyle(
-                      // color: complementColor(),
-                      color: accentColor(),
-                      fontFamily: 'Space',
-                      fontSize: 15,
-                      fontWeight: FontWeight.w900),
+                  color: accentColor(),
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ],
           ),
         ),
+
+        // LISTS OF CONTAINERS DISPLAYING RECENT TRANSACTION
         Container(
           margin: const EdgeInsets.only(left: 25.0, right: 25.0),
-          // height: 300,
-
-          // width: 350,
-          // decoration: BoxDecoration(
-          //   borderRadius: const BorderRadius.all(Radius.circular(8)),
-          //   border: Border.all(
-          //     color: const Color(0xffe0c2a4),
-          //     width: .5,
-          //   ),
-          //   //color: Colors.white
-          //   // color: const Color(0xfff8e0bf),
-          //   // border: ,
-          // ),
           child: ListView.builder(
             padding: const EdgeInsets.only(top: 15.0, bottom: 0),
             shrinkWrap: true,
             physics: const BouncingScrollPhysics(),
             itemBuilder: (context, index) {
-              return Container(
+              return shadowBox(
                 margin: const EdgeInsets.only(top: 10, bottom: 10),
                 padding: const EdgeInsets.fromLTRB(0, 12, 0, 13),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  color: Colors.white,
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Color(0xffe1e1e1),
-                      blurRadius: 40,
-                      // spreadRadius: 5
-                    )
-                  ],
-                ),
-                child: ListTile(
+                // CONTAINS PEOPLE NAME, TIME, PAYMENT RECEIVED / SENT TRANSACTION AMOUNT
+                content: ListTile(
+                  // OPEN PAYMENT DESCRIPTION
                   onTap: () => ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                           content: Text(
                               'Payment Page is Opening for ${names[index]}'))),
-                  leading: CircleAvatar(
-                    radius: 28,
-                    backgroundColor: Colors.grey.shade200,
-                    // backgroundImage: AssetImage('assets/images/Adit.jpg'),
-                  ),
-                  title: Text(
+
+                  // USER PROFILE PHOTO
+                  leading: circularProfile(),
+                  // USER NAME
+                  title: text(
                     names[index],
-                    style: TextStyle(
-                        color: primaryColor(),
-                        fontFamily: 'Space',
-                        fontSize: 15,
-                        fontWeight: FontWeight.w900),
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
                   ),
-                  subtitle: Text(
-                    '12:00 AM - Payment Recieved',
-                    style: TextStyle(
-                        color: complementColor(),
-                        fontFamily: 'Space',
-                        fontSize: 11,
-                        fontWeight: FontWeight.w900),
+                  // TIME , PAYMENT RECEIVED / SENT
+                  subtitle: text(
+                    '12:00 AM - Payment Received',
+                    color: complementColor(),
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600,
                   ),
                   trailing: FittedBox(
                     fit: BoxFit.contain,
-                    // width: 80,
-                    // height: 50,
-                    // color: Colors.blue,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
-                      children: const [
-                        Icon(
+                      children: [
+                        const Icon(
                           FontAwesomeIcons.plus,
                           color: Color(0xe60fb022),
                           size: 12,
                         ),
-                        Text(
+                        text(
                           ' ₹ 100',
-                          style: TextStyle(
-                              fontSize: 15,
-                              color: Color(0xe60fb022),
-                              fontFamily: 'Space',
-                              fontWeight: FontWeight.w900),
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xe60fb022),
+                          fontSize: 15,
                         )
                       ],
                     ),
                   ),
-                  // onTap: () => setState(() {
-                  //   //usr_name = names[index];
-                  // }),
-                  // child: Column(
-                  //   crossAxisAlignment: CrossAxisAlignment.center,
-                  //   mainAxisAlignment: MainAxisAlignment.center,
-                  //   children: [
-                  //     const SizedBox(
-                  //       height: 50,
-                  //       width: 50,
-                  //       // child: Image.asset(
-                  //       //     'assets/images/user_icon_5.png')
-                  //       child: CircleAvatar(
-                  //         backgroundColor: Color(0xffe7cebc),
-                  //         // backgroundImage: AssetImage('assets/images/Adit.jpg'),
-                  //       ),
-                  //     ),
-                  //     Padding(
-                  //       padding: const EdgeInsets.all(8.0),
-                  //       child: Text(
-                  //         names[index],
-                  //         style: const TextStyle(
-                  //             fontSize: 12,
-                  //             color: Colors.black54,
-                  //             // backgroundColor: Colors.yellow,
-                  //             fontWeight: FontWeight.w700),
-                  //       ),
-                  //     )
-                  //   ],
-                  // ),
                 ),
               );
             },
@@ -678,4 +520,5 @@ class _RecentTransactionState extends State<RecentTransaction> {
     );
   }
 }
-// ----------------------------------------------------------------
+
+// -----------------------------------------------------------------=>
