@@ -242,6 +242,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                               bottom: 32),
                                           child: Lottie.asset(
                                               'assets/anim/Wallet.json',
+                                              frameRate: FrameRate.max,
                                               width: 350),
                                         ),
                                         Icon(

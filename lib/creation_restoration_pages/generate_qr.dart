@@ -147,7 +147,10 @@ class _GenerateQRState extends State<GenerateQR> {
                           Container(
                             margin: const EdgeInsets.only(top: 10, bottom: 10),
                             height: 200,
-                            child: Lottie.asset('assets/anim/encryption.json'),
+                            child: Lottie.asset(
+                              'assets/anim/encryption.json',
+                              frameRate: FrameRate.max,
+                            ),
                           ),
                           text('Choose an Encryption method: ',
                               fontSize: 20, fontWeight: FontWeight.w600),

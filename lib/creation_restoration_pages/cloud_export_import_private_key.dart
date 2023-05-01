@@ -59,6 +59,7 @@ class _CloudUploadState extends State<CloudUpload> {
                 margin: const EdgeInsets.only(top: 10, bottom: 30),
                 child: Lottie.asset(
                   'assets/anim/cloud-store.json',
+                  frameRate: FrameRate.max,
                 ),
               ),
               Center(

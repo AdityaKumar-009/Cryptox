@@ -2,7 +2,6 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:cryptoX/private/aes_encryption_decryption.dart';
 import 'package:cryptoX/profile_page.dart';
-import 'package:encrypt/encrypt.dart' as enc;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
@@ -125,7 +124,8 @@ class _Scan2PayState extends State<Scan2Pay>
                     height: h,
                     child:
                         (!isOff) //if camera is not off then show scanning animation
-                            ? Lottie.asset('assets/anim/scan.json', width: 300)
+                            ? Lottie.asset('assets/anim/scan.json',
+                                frameRate: FrameRate.max, width: 300)
                             : const SizedBox(),
                   ),
                 )),

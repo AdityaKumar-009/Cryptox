@@ -9,16 +9,7 @@ class ThirdPage extends StatefulWidget {
   State<ThirdPage> createState() => _ThirdPageState();
 }
 
-class _ThirdPageState extends State<ThirdPage>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _animController = AnimationController(
-    animationBehavior: AnimationBehavior.preserve,
-    vsync: this,
-    duration: const Duration(
-      milliseconds: 4500,
-    ),
-  );
-
+class _ThirdPageState extends State<ThirdPage> {
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -29,6 +20,7 @@ class _ThirdPageState extends State<ThirdPage>
           children: [
             Lottie.asset(
               'assets/anim/no-history-found.json',
+              frameRate: FrameRate.max,
               // 'https://assets1.lottiefiles.com/packages/lf20_iikbn1ww.json',
               // 'https://assets10.lottiefiles.com/packages/lf20_xvf1dl3s.json',
               height: 250,

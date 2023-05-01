@@ -126,6 +126,7 @@ class _BalanceState extends State<Balance> {
                             child: // LOTTIE ANIMATION PACKAGE FOR IMPORTING CUSTOM .JSON FILE ANIMATION
                                 Lottie.asset(
                               'assets/anim/ethereum.json',
+                              frameRate: FrameRate.max,
                               width: 150,
                             ),
                           ),
@@ -285,6 +286,7 @@ class _BalanceState extends State<Balance> {
                               right: -5,
                               child: Lottie.asset(
                                 'assets/anim/no-wallet.json',
+                                frameRate: FrameRate.max,
                                 width: 210,
                               ),
                             ),

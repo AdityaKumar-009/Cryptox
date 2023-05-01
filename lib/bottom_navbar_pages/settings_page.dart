@@ -22,7 +22,8 @@ class _FourthPageState extends State<FourthPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Center(
-            child: Lottie.asset('assets/anim/settings.json', width: 350),
+            child: Lottie.asset('assets/anim/settings.json',
+                frameRate: FrameRate.max, width: 350),
           ),
           const Padding(
             padding: EdgeInsets.only(left: 20, bottom: 20),

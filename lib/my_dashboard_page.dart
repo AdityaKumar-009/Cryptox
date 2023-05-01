@@ -189,6 +189,7 @@ class MyHomePageState extends State<MyHomePage>
             ));
           },
           child: Lottie.asset('assets/anim/qrScanner.json',
+              frameRate: FrameRate.max,
               controller:
                   _animController), // TO DELAYED AND STOP THE ANIMATION USING THE CONTROLLER
         ),

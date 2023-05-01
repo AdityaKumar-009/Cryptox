@@ -79,7 +79,7 @@ class _KeyGenState extends State<KeyGen> with SingleTickerProviderStateMixin {
     player.play();
   }
 
-  // WAS TRYING TO VIBRATE THE PHONE WHEN WALLET GENERATED! -- YOU CAN TRY TO FIX IT 😊
+  // TODO WAS TRYING TO VIBRATE THE PHONE WHEN WALLET GENERATED! -- YOU CAN TRY TO FIX IT 😊
   // vibrate() async {
   //   if (await Vibration.hasVibrator() == true) {
   //     print('VIBRATION STARTED-----------------------------.');
@@ -127,7 +127,7 @@ class _KeyGenState extends State<KeyGen> with SingleTickerProviderStateMixin {
                 margin: const EdgeInsets.only(top: 30),
                 width: 85,
                 child: Lottie.asset('assets/anim/success.json',
-                    controller: _controller),
+                    frameRate: FrameRate.max, controller: _controller),
               ),
               Container(
                 margin: const EdgeInsets.only(top: 20, bottom: 20),
