@@ -41,6 +41,8 @@ class _ConfirmSeedState extends State<ConfirmSeed> {
   int count =
       0; // COUNTER VARIABLE TO COUNT TEXT INPUTS IF = 12 means all value entered
 
+  int? count2; //FOR RESTORE PAGE : ie to count all the not emptied text fields
+
   List<TextEditingController> input = [];
 
   Color textColor = Colors.blueGrey;
@@ -219,9 +221,8 @@ class _ConfirmSeedState extends State<ConfirmSeed> {
                 height: 50,
                 child: button(
                   color: primaryColor(),
-                  onPressed: ((count == 12 ||
-                          widget.privateAddress !=
-                              null)) //---------------------------
+                  onPressed: ((count == 12 || widget.privateAddress != null) ||
+                          count2 == 12) //---------------------------
                       ? () {
                           if (widget.page == "create") {
                             Navigator.pushReplacement(
@@ -338,6 +339,7 @@ class _ConfirmSeedState extends State<ConfirmSeed> {
                       'or type them manually without any spaces by clicking on these TextField down below 👇.',
                       textAlign: TextAlign.justify,
                       fontWeight: FontWeight.w600,
+                      color: accentColor(),
                       fontSize: 10,
                     ),
                   ),
@@ -431,9 +433,11 @@ class _ConfirmSeedState extends State<ConfirmSeed> {
                                                   }
                                                 },
                                                 onSubmitted: (txt) {
-                                                  if (widget.page ==
-                                                      'restore') {
-                                                    input[index].text = txt;
+                                                  count2 = 0;
+                                                  for (int i = 0; i < 12; i++) {
+                                                    if (input[i].text != '') {
+                                                      count2 = count2! + 1;
+                                                    }
                                                   }
                                                 },
                                                 textAlign: TextAlign.center,
@@ -556,7 +560,7 @@ class _ConfirmSeedState extends State<ConfirmSeed> {
                                   'Press OK button to restore the wallet.',
                                   textAlign: TextAlign.justify,
                                   fontSize: 10,
-                                  color: red(),
+                                  color: complementColor(),
                                   fontWeight: FontWeight.w600),
                             )
                           ],
