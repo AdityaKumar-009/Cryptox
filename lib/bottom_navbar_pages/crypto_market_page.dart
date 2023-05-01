@@ -29,7 +29,7 @@ class _SecondPageState extends State<SecondPage> {
           ],
         ),
 
-        //ADD YOUR ASSET PRICES LISTs
+        // TODO ADD YOUR ASSET PRICES LISTs
         //
       ),
     );

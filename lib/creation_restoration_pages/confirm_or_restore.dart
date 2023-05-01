@@ -495,7 +495,7 @@ class _ConfirmSeedState extends State<ConfirmSeed> {
                       ? Container(
                           margin: const EdgeInsets.fromLTRB(20, 20, 20, 25),
                           child: text(
-                              'Note: Enter the all the correct words in order to proceed further to generate your wallet keys.',
+                              'Note: Enter all the correct words in order to proceed further to generate your wallet keys.',
                               textAlign: TextAlign.justify,
                               fontSize: 10,
                               color: red(),

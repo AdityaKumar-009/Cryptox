@@ -121,13 +121,13 @@ class _CloudUploadState extends State<CloudUpload> {
                       ),
                       onPressed: () async {
                         if (widget.Page == 'export_to_db') {
-                          //
+                          // TODO ------------------------|
                           // LOGIC TO EXPORT / UPLOAD PRIVATE KEY
                           // [ firstly encrypt the private key using UseAES class then create a .txt file ]
                           // AND UPLOAD LOGIC TO THE FIRESTORE CLOUD
                           //
                         } else {
-                          //
+                          // TODO -------------------------|
                           // LOGIC TO IMPORT BACK ENCRYPTED PRIVATE KEY FROM A FILE THAT WAS STORED IN THE FIRESTORE AND
                           // SHOW THE POPUP [ used in the scanner_page.dart ] TO ENTER THE PASSWORD
                           //  (IF ENCRYPTED USING CUSTOM PASSWORD) FOR DECRYPTION AND POP THE PAGE WITH RETURNING THAT PRIVATE KEY STRING
