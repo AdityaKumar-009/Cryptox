@@ -5,7 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lottie/lottie.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'app_theme/theme.dart';
+import 'package:cryptoX/app_utilities/theme.dart';
 
 class ProfilePage extends StatefulWidget {
   String? pubKey;
@@ -33,9 +33,16 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: lightTheme(),
+      // backgroundColor: lightTheme(),
       // TITLED APP BAR CREATED IN THEME.DART
-      appBar: titledAppBar(title: 'MY PROFILE'),
+      appBar: titledAppBar(
+          title: 'MY PROFILE',
+          context: context,
+          leadingContent: IconButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              icon: const Icon(FontAwesomeIcons.angleLeft))),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(
             parent: AlwaysScrollableScrollPhysics()),
@@ -47,9 +54,10 @@ class _ProfilePageState extends State<ProfilePage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   shadowBox(
+                    context: context,
                     margin: const EdgeInsets.only(left: 25, right: 25),
                     content: Container(
-                      color: lightTheme(),
+                      // color: lightTheme(),
                       width: 350,
                       height: 620,
                       child: Stack(
@@ -110,9 +118,10 @@ class _ProfilePageState extends State<ProfilePage> {
                                                   Colors.green.shade700,
                                               behavior:
                                                   SnackBarBehavior.floating,
-                                              content: const Text(
+                                              content: Text(
                                                 'Copied to your clipboard !',
                                                 style: TextStyle(
+                                                    color: lightTheme(),
                                                     fontFamily: 'Space'),
                                               ),
                                             ));
@@ -124,11 +133,18 @@ class _ProfilePageState extends State<ProfilePage> {
                                               0, 10, 0, 30),
                                           padding: const EdgeInsets.fromLTRB(
                                               15, 10, 10, 10),
-                                          width: 300,
-                                          decoration: const BoxDecoration(
-                                            color: Color(0xffffe093),
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(8)),
+                                          width: 275,
+                                          decoration: BoxDecoration(
+                                            color: (MediaQuery
+                                                        .platformBrightnessOf(
+                                                            context) ==
+                                                    Brightness.light)
+                                                ? const Color(0xdfffda9c)
+                                                : Theme.of(context)
+                                                    .dividerColor,
+                                            borderRadius:
+                                                const BorderRadius.all(
+                                                    Radius.circular(8)),
                                           ),
                                           child: Column(
                                             crossAxisAlignment:
@@ -176,16 +192,17 @@ class _ProfilePageState extends State<ProfilePage> {
                                                       size: 18,
                                                     )),
                                               ),
-                                              text(
-                                                'Public Address: ',
-                                                fontSize: 14,
-                                              ),
+                                              text('Public Address: ',
+                                                  fontSize: 14,
+                                                  color: accentColor(),
+                                                  fontWeight: FontWeight.w600),
                                               Container(
                                                   margin:
                                                       const EdgeInsets.fromLTRB(
                                                           0, 10, 0, 10),
                                                   child: text(
                                                     widget.pubKey.toString(),
+                                                    color: accentColor(),
                                                     textAlign: TextAlign.center,
                                                     fontSize: 14,
                                                     fontWeight: FontWeight.w700,
@@ -201,9 +218,13 @@ class _ProfilePageState extends State<ProfilePage> {
                                         color: red(),
                                         fontWeight: FontWeight.w600,
                                       ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(
+                                      Container(
+                                        margin: const EdgeInsets.only(
                                             top: 10, bottom: 10),
+                                        padding: const EdgeInsets.all(10),
+                                        decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius: round_8()),
                                         child: QrImage(
                                           data: widget.pubKey.toString(),
                                           version: QrVersions.auto,
@@ -247,7 +268,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                         ),
                                         Icon(
                                           FontAwesomeIcons.triangleExclamation,
-                                          color: Colors.red.shade500,
+                                          color: red(),
                                           size: 35,
                                         ),
                                         Padding(

@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
-import 'app_theme/theme.dart';
+import 'package:cryptoX/app_utilities/theme.dart';
 
 class Scan2Pay extends StatefulWidget {
   String? modeOfScanning;
@@ -234,9 +234,12 @@ class _Scan2PayState extends State<Scan2Pay>
                               Expanded(
                                 flex: 20,
                                 child: inputField(
+                                    context: context,
+                                    textColor: primaryColor(),
+                                    backgroundColor: lightTheme(),
                                     hintText:
                                         '0x - - - - - - - - - - - - - - -',
-                                    shadowColor: const Color(0x54de9f3f),
+                                    shadowColor: const Color(0xA1DE9F3F),
                                     onTap: () async {
                                       await controller?.pauseCamera();
                                       setState(() {
@@ -347,7 +350,10 @@ class _Scan2PayState extends State<Scan2Pay>
         behavior: SnackBarBehavior.floating,
         content: const Text(
           'No Camera Permission allowed by the User!',
-          style: TextStyle(fontFamily: 'Space', fontWeight: FontWeight.w600),
+          style: TextStyle(
+              fontFamily: 'Space',
+              fontWeight: FontWeight.w600,
+              color: Colors.white),
         ),
       ));
     }
@@ -405,10 +411,10 @@ class _Scan2PayState extends State<Scan2Pay>
         animationType: AnimationType.grow,
         isOverlayTapDismiss: false,
         descTextAlign: TextAlign.start,
-        backgroundColor: lightGrey(),
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         animationDuration: const Duration(milliseconds: 400),
         alertBorder: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: round_16(),
           side: BorderSide.none,
         ),
         titleStyle: const TextStyle(
@@ -421,7 +427,7 @@ class _Scan2PayState extends State<Scan2Pay>
       dynamic
           popup; // CREATED AN OBJECT FOR LATER ASSIGNING AN ALERT [ SINCE OK BUTTON IS DISMISSING ITS OWN INSTANCE AND DECLARED INSIDE IT ]
 
-      // TODO USE THIS POPUP IN DECRYPTING PRIVATE KEY FROM THE CLOUD IN THE CLOUD RESTORE | IMPORT PAGE
+      // TODO -> USE THIS 'POPUP ALERT' IN DECRYPTING PRIVATE KEY FROM THE CLOUD IN THE CLOUD RESTORE | IMPORT PAGE
       popup = Alert(
         closeFunction: () {
           controller.resumeCamera();
@@ -454,6 +460,7 @@ class _Scan2PayState extends State<Scan2Pay>
               width: 320,
               margin: const EdgeInsets.all(10),
               child: inputField(
+                context: context,
                 onChanged: (message) {
                   setState(() {
                     customKey = message;
@@ -509,12 +516,12 @@ class _Scan2PayState extends State<Scan2Pay>
                       children: [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
+                          children: [
                             Padding(
-                              padding: EdgeInsets.all(8.0),
+                              padding: const EdgeInsets.all(8.0),
                               child: Icon(
                                 Icons.error,
-                                color: Colors.white,
+                                color: lightTheme(),
                               ),
                             ),
                             SizedBox(
@@ -523,6 +530,7 @@ class _Scan2PayState extends State<Scan2Pay>
                                 'ERROR OCCURRED!',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
+                                    color: lightTheme(),
                                     fontFamily: 'Space',
                                     fontWeight: FontWeight.w600,
                                     fontSize: 18),
@@ -531,20 +539,30 @@ class _Scan2PayState extends State<Scan2Pay>
                           ],
                         ),
                         const Divider(),
-                        const Text(
+                        Text(
                           'Reasons can be:',
                           style: TextStyle(
-                              fontFamily: 'Space',
-                              fontWeight: FontWeight.w600,
-                              fontSize: 12),
+                            fontFamily: 'Space',
+                            fontWeight: FontWeight.w600,
+                            fontSize: 12,
+                            color: lightTheme(),
+                          ),
                         ),
-                        const Text(
+                        Text(
                           '1. Incorrect password entered.',
-                          style: TextStyle(fontFamily: 'Space', fontSize: 10),
+                          style: TextStyle(
+                            fontFamily: 'Space',
+                            fontSize: 10,
+                            color: lightTheme(),
+                          ),
                         ),
-                        const Text(
+                        Text(
                           '2. Scanned an invalid QR.',
-                          style: TextStyle(fontFamily: 'Space', fontSize: 10),
+                          style: TextStyle(
+                            fontFamily: 'Space',
+                            fontSize: 10,
+                            color: lightTheme(),
+                          ),
                         ),
                       ],
                     ),

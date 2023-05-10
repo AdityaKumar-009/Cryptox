@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lottie/lottie.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import '../app_theme/theme.dart';
+import 'package:cryptoX/app_utilities/theme.dart';
 
 class GenerateQR extends StatefulWidget {
   String? seedWords, privateKey, page;
@@ -38,8 +38,9 @@ class _GenerateQRState extends State<GenerateQR> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: lightGrey(),
+        // backgroundColor: lightGrey(),
         appBar: titledAppBar(
+            context: context,
             title: (widget.page == 'words')
                 ? 'Encrypting Words'
                 : 'Encrypting Key',
@@ -48,12 +49,12 @@ class _GenerateQRState extends State<GenerateQR> {
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                icon: Icon(
+                icon: const Icon(
                   FontAwesomeIcons.xmark,
-                  color: primaryColor(),
                 ))),
         bottomNavigationBar: (buttonPressed == false)
             ? bottomBar(
+                context: context,
                 content: SizedBox(
                   height: 80,
                   child: Row(
@@ -65,7 +66,7 @@ class _GenerateQRState extends State<GenerateQR> {
                         width: (widget.page == 'words') ? 125 : 155,
                         height: 50,
                         child: button(
-                          color: primaryColor(),
+                          // color: primaryColor(),
                           content: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
@@ -74,7 +75,7 @@ class _GenerateQRState extends State<GenerateQR> {
                                     ? 'Generate'
                                     : 'Generate QR',
                                 fontSize: 15,
-                                color: lightTheme(),
+                                // color: lightTheme(),
                                 fontWeight: FontWeight.w600,
                               ),
                               const Icon(Icons.qr_code_2_rounded),
@@ -95,18 +96,22 @@ class _GenerateQRState extends State<GenerateQR> {
                               width: 155,
                               height: 50,
                               child: button(
-                                color: accentColor(),
+                                color:
+                                    (MediaQuery.platformBrightnessOf(context) ==
+                                            Brightness.light)
+                                        ? primaryColor()
+                                        : const Color(0xff484848),
                                 content: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
                                     text('Cloud Store',
                                         fontSize: 15,
-                                        color: primaryColor(),
+                                        color: lightTheme(),
                                         fontWeight: FontWeight.w600),
-                                    Icon(
+                                    const Icon(
                                       FontAwesomeIcons.cloudArrowUp,
-                                      color: primaryColor(),
+                                      color: Colors.blueAccent,
                                     ),
                                   ],
                                 ),
@@ -161,7 +166,11 @@ class _GenerateQRState extends State<GenerateQR> {
                                 title: text(
                                   'Encrypt using a default password',
                                   fontSize: 15,
-                                  color: accentColor(),
+                                  color: (option == 'default')
+                                      ? accentColor()
+                                      : Theme.of(context)
+                                          .colorScheme
+                                          .inverseSurface,
                                 ),
                                 value: 'default',
                                 groupValue: option,
@@ -177,7 +186,11 @@ class _GenerateQRState extends State<GenerateQR> {
                                 title: text(
                                   'Encrypt using a custom password',
                                   fontSize: 15,
-                                  color: accentColor(),
+                                  color: (option == 'custom')
+                                      ? accentColor()
+                                      : Theme.of(context)
+                                          .colorScheme
+                                          .inverseSurface,
                                 ),
                                 value: 'custom',
                                 groupValue: option,
@@ -192,6 +205,7 @@ class _GenerateQRState extends State<GenerateQR> {
                                   width: 320,
                                   margin: const EdgeInsets.all(10),
                                   child: inputField(
+                                    context: context,
                                     controller: password,
                                     hintText: 'Enter Password',
                                     maxLength: 32,
@@ -267,7 +281,7 @@ class _GenerateQRState extends State<GenerateQR> {
                                         : widget.doEncryption(
                                             key: userCustomKey),
                                     version: QrVersions.auto,
-                                    size: 320,
+                                    size: 300,
                                     gapless: false,
                                     // CENTERED LOGO IN QR
                                     embeddedImage: const AssetImage(

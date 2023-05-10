@@ -1,4 +1,4 @@
-import 'package:cryptoX/app_theme/theme.dart';
+import 'package:cryptoX/app_utilities/theme.dart';
 import 'package:cryptoX/creation_restoration_pages/confirm_or_restore.dart';
 import 'package:cryptoX/private/secret_keys.dart';
 import 'package:cryptoX/creation_restoration_pages/generate_qr.dart';
@@ -36,71 +36,76 @@ class _GenerateSeedPhrasesState extends State<GenerateSeedPhrases> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: lightGrey(),
+      // backgroundColor: lightGrey(),
       appBar: titledAppBar(
+          context: context,
           title: 'Create Wallet',
           leadingContent: IconButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              icon: Icon(FontAwesomeIcons.angleLeft, color: primaryColor()))),
+              icon: const Icon(FontAwesomeIcons.angleLeft))),
       bottomNavigationBar: bottomBar(
+          context: context,
           content: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          SizedBox(
-              width: 160,
-              height: 50,
-              child: button(
-                color: primaryColor(),
-                content: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    text('Generate QR',
-                        color: lightTheme(),
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600),
-                    const Icon(Icons.qr_code_2),
-                  ],
-                ),
-                onPressed: () async {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => GenerateQR(
-                                words: generatedWords,
-                                Page: 'words',
-                              )));
-                },
-              )),
-          SizedBox(
-              width: 95,
-              height: 50,
-              child: button(
-                color: accentColor(),
-                content: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    text('  Next',
-                        fontSize: 15,
-                        color: lightTheme(),
-                        fontWeight: FontWeight.w600),
-                    const Icon(FontAwesomeIcons.angleRight),
-                  ],
-                ),
-                onPressed: () async {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ConfirmSeed(
-                                wordPhrases: generatedWords,
-                                twelveWordsList: twelveWords,
-                                Page: 'create',
-                              )));
-                },
-              )),
-        ],
-      )),
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              SizedBox(
+                  width: 160,
+                  height: 50,
+                  child: button(
+                    color: (MediaQuery.platformBrightnessOf(context) ==
+                            Brightness.light)
+                        ? primaryColor()
+                        : const Color(0xff484848),
+                    content: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        text('Generate QR',
+                            color: lightTheme(),
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600),
+                        Icon(Icons.qr_code_2, color: lightTheme()),
+                      ],
+                    ),
+                    onPressed: () async {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => GenerateQR(
+                                    words: generatedWords,
+                                    Page: 'words',
+                                  )));
+                    },
+                  )),
+              SizedBox(
+                  width: 95,
+                  height: 50,
+                  child: button(
+                    // color: accentColor(),
+                    content: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        text('  Next',
+                            fontSize: 15,
+                            // color: lightTheme(),
+                            fontWeight: FontWeight.w600),
+                        const Icon(FontAwesomeIcons.angleRight),
+                      ],
+                    ),
+                    onPressed: () async {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ConfirmSeed(
+                                    wordPhrases: generatedWords,
+                                    twelveWordsList: twelveWords,
+                                    Page: 'create',
+                                  )));
+                    },
+                  )),
+            ],
+          )),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Column(
@@ -116,6 +121,10 @@ class _GenerateSeedPhrasesState extends State<GenerateSeedPhrases> {
                           const EdgeInsets.only(left: 25, top: 22, right: 3),
                       child: text(
                         'STEP 1. ',
+                        color: (MediaQuery.platformBrightnessOf(context) ==
+                                Brightness.light)
+                            ? Colors.black
+                            : accentColor(),
                         fontWeight: FontWeight.w600,
                         fontSize: 14,
                       ),
@@ -127,7 +136,11 @@ class _GenerateSeedPhrasesState extends State<GenerateSeedPhrases> {
                         textAlign: TextAlign.justify,
                         text: TextSpan(
                             style: TextStyle(
-                                color: primaryColor(),
+                                color:
+                                    (MediaQuery.platformBrightnessOf(context) ==
+                                            Brightness.light)
+                                        ? Colors.black
+                                        : accentColor(),
                                 fontFamily: 'Space',
                                 fontWeight: FontWeight.w600),
                             children: const [
@@ -158,6 +171,7 @@ class _GenerateSeedPhrasesState extends State<GenerateSeedPhrases> {
                         'Two ways to remember these words:\n\n👉  Write these words on a sheet of paper (or a metal sheet etc.) and put it safe somewhere from theft and damages.\n\n👉 Generate QR of these words then you can print it on a paper and put it safe.\n',
                         textAlign: TextAlign.justify,
                         fontSize: 12,
+                        color: complementColor(),
                         fontWeight: FontWeight.w500,
                       ),
                     ],
@@ -186,13 +200,22 @@ class _GenerateSeedPhrasesState extends State<GenerateSeedPhrases> {
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(8),
-                              color: Colors.white,
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Color(0xffe8e8e8),
-                                  blurRadius: 40,
-                                )
-                              ],
+                              color:
+                                  (MediaQuery.of(context).platformBrightness ==
+                                          Brightness.light)
+                                      ? Colors.white
+                                      : Colors.black26,
+                              boxShadow: (MediaQuery.of(context)
+                                          .platformBrightness ==
+                                      Brightness.light)
+                                  ? const [
+                                      BoxShadow(
+                                        color: Color(0xffe8e8e8), // LIGHT THEME
+                                        // color: Color(0xFF2C2C2C), // DARK THEME
+                                        blurRadius: 40,
+                                      )
+                                    ]
+                                  : null,
                             ),
                             child: Text(
                               '${(index + 1)}. ${twelveWords[index]}',

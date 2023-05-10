@@ -1,4 +1,4 @@
-import 'package:cryptoX/app_theme/theme.dart';
+import 'package:cryptoX/app_utilities/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lottie/lottie.dart';
@@ -22,22 +22,20 @@ class _CloudUploadState extends State<CloudUpload> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: lightGrey(),
-
       //
 
       appBar: titledAppBar(
+          context: context,
           title: (widget.Page != 'import_from_db')
-              ? 'CLOUD STORE'
-              : 'CLOUD RESTORE',
+              ? 'Cloud Store'
+              : 'Cloud Restore',
           putLeading: true,
           leadingContent: IconButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              icon: Icon(
+              icon: const Icon(
                 FontAwesomeIcons.xmark,
-                color: primaryColor(),
               ))),
 
       //
@@ -74,20 +72,19 @@ class _CloudUploadState extends State<CloudUpload> {
                             fontSize: 15, fontWeight: FontWeight.w600),
                         const Icon(
                           FontAwesomeIcons.googleDrive,
-                          color: Colors.blue,
                         ),
                       ],
                     ),
                     onPressed: () async {
                       if (widget.Page == 'export_to_db') {
                         //
-                        // LOGIC TO EXPORT / UPLOAD PRIVATE KEY
+                        // TODO : LOGIC TO EXPORT / UPLOAD PRIVATE KEY
                         // [ firstly encrypt the private key using UseAES class then create a .txt file ]
                         // AND UPLOAD -> LOGIC TO THE GOOGLE DRIVE
                         //
                       } else {
                         //
-                        // LOGIC TO IMPORT BACK ENCRYPTED PRIVATE KEY FROM A FILE STORED IN THAT GOOGLE DRIVE AND
+                        // TODO : LOGIC TO IMPORT BACK ENCRYPTED PRIVATE KEY FROM A FILE STORED IN THAT GOOGLE DRIVE AND
                         // SHOW THE POPUP (IF ENCRYPTED USING CUSTOM PASSWORD)
                         // TO ENTER THE PASSWORD FOR DECRYPTION AND POP THE PAGE WITH RETURNING THAT PRIVATE KEY STRING
                         //
@@ -106,7 +103,10 @@ class _CloudUploadState extends State<CloudUpload> {
                     width: 150,
                     height: 50,
                     child: button(
-                      color: primaryColor(),
+                      color: (MediaQuery.platformBrightnessOf(context) ==
+                              Brightness.dark)
+                          ? Theme.of(context).cardColor
+                          : primaryColor(),
                       content: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [

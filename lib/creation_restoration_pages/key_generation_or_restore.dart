@@ -8,8 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:vibration/vibration.dart';
 import 'package:web3dart/credentials.dart';
-
-import '../app_theme/theme.dart';
+import 'package:cryptoX/app_utilities/theme.dart';
 
 class KeyGen extends StatefulWidget {
   String? seedPhrase, pubAddress, privAddress, page;
@@ -111,8 +110,9 @@ class _KeyGenState extends State<KeyGen> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: lightGrey(),
+      // backgroundColor: lightGrey(),
       appBar: titledAppBar(
+          context: context,
           title:
               (widget.page == 'create') ? 'Wallet Created' : 'Wallet Restored'),
 
@@ -149,6 +149,7 @@ class _KeyGenState extends State<KeyGen> with SingleTickerProviderStateMixin {
                 ),
               ),
               shadowBox(
+                context: context,
                 margin: const EdgeInsets.only(
                     top: 10, left: 25, right: 25, bottom: 10),
                 padding: const EdgeInsets.all(20),
@@ -216,10 +217,12 @@ class _KeyGenState extends State<KeyGen> with SingleTickerProviderStateMixin {
                             const Icon(Icons.enhanced_encryption_rounded),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: text('Encrypt | Export\nPrivate Key',
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w600,
-                                  color: lightTheme()),
+                              child: text(
+                                'Encrypt | Export\nPrivate Key',
+                                fontSize: 15,
+                                fontWeight: FontWeight.w600,
+                                // color: lightTheme()
+                              ),
                             ),
                           ],
                         ),
@@ -240,14 +243,17 @@ class _KeyGenState extends State<KeyGen> with SingleTickerProviderStateMixin {
                 width: 200,
                 height: 50,
                 child: button(
-                  color: primaryColor(),
+                  color: (MediaQuery.platformBrightnessOf(context) ==
+                          Brightness.dark)
+                      ? accentColor()
+                      : primaryColor(),
                   content: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       const Icon(FontAwesomeIcons.house),
                       text(
                         'Home Page',
-                        color: lightTheme(),
+                        // color: lightTheme(),
                         fontSize: 15,
                         fontWeight: FontWeight.w600,
                       ),

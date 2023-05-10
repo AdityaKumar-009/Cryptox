@@ -1,15 +1,76 @@
 import 'package:encrypt/encrypt.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class AESService {
   Key fetchKey({required String? key});
   String doEncryption({String? words, String? privateKey, String? key});
   String doDecryption({String? key, Barcode? res});
+  void saveKeyForBackup(
+    String key,
+    String? words,
+    String? privateKey,
+  );
+  void saveQRForBackup(
+    String encryptedVal,
+    String? words,
+    String? privateKey,
+  );
 }
 
 class UseAES extends AESService {
-  // FOR RETURNING ACTUAL KEY : DEFAULT OR CUSTOM
+  //
+  @override
+  void saveQRForBackup(
+      String encryptedVal, String? words, String? privateKey) async {
+    SharedPreferences sp = await SharedPreferences.getInstance();
+    if (words != null) {
+      try {
+        sp.setString('encryptedWords', encryptedVal);
+        print(
+            '---------encryptedWords store successfully in shared preference!-----------');
+      } catch (e) {
+        print(
+            '---------encryptedWords UNABLE to store in shared preference!-----------');
+      }
+    } else {
+      try {
+        sp.setString('encryptedPrivateKey', encryptedVal);
+        print(
+            '---------encryptedPrivateKey stored successfully! in shared preference!-----------');
+      } catch (e) {
+        print(
+            '---------encryptedPrivateKey UNABLE to store in shared preference!-----------');
+      }
+    }
+  }
 
+  //
+  @override
+  void saveKeyForBackup(String key, String? words, String? privateKey) async {
+    SharedPreferences sp = await SharedPreferences.getInstance();
+    if (words != null) {
+      try {
+        sp.setString('QRWordsPassword', key);
+        print(
+            '--------- QRWordsPassword stored successfully! in shared preference! -----------');
+      } catch (e) {
+        print(
+            '--------- QRWordsPassword UNABLE to store in shared preference! -----------');
+      }
+    } else {
+      try {
+        sp.setString('QRPrivatePassword', key);
+        print(
+            '--------- QRPrivatePassword stored successfully! in shared preference! -----------');
+      } catch (e) {
+        print(
+            '--------- QRPrivatePassword UNABLE to store in shared preference! -----------');
+      }
+    }
+  }
+
+  // FOR RETURNING ACTUAL KEY : DEFAULT OR CUSTOM
   @override
   Key fetchKey({required String? key}) {
     String defaultKey = 'It is my Secret Key No One Knows'; //DEFAULT PASSWORD
@@ -21,8 +82,11 @@ class UseAES extends AESService {
       print(
           'KEY IS -------------------> ${key} \t\t [LENGTH]----->${key.length}');
       String key32len = key; //CUSTOM PASSWORD
+
+      // SAVING PASSWORD FOR BACKUP [  IN SETTINGS PAGE ]
+
       print(
-          'MY 32 LENGTH KEY [BEFORE LOOP]-------------------> ${key32len} [LENGTH]----->${key32len.length}');
+          'MY 32 LENGTH KEY [BEFORE LOOP]-------------------> $key32len [LENGTH]----->${key32len.length}');
       for (int i = key.length; i < 32; i++) {
         key32len += '*';
       }
@@ -34,9 +98,12 @@ class UseAES extends AESService {
   }
 
   // FOR ENCRYPTION USED IN QR CREATION PAGE
-  // USE THIS METHOD IN CLOUD EXPORT
+  // TODO -> USE THIS METHOD IN CLOUD EXPORT
   @override
   String doEncryption({String? words, String? privateKey, String? key}) {
+    if (key != null) {
+      saveKeyForBackup(key, words, privateKey);
+    }
     final myKey = fetchKey(key: key);
     final iv = IV.fromLength(16);
     final encryptor = Encrypter(AES(myKey));
@@ -54,11 +121,12 @@ class UseAES extends AESService {
     print('ENCRYPTED VALUE ------------->  $encryptedVal');
     print('DECRYPTED VALUE ------------->  $decryptedVal');
 
+    saveQRForBackup(encryptedVal, words, privateKey);
     return encryptedVal;
   }
 
   // FOR DECRYPTION USED IN SCANNER PAGE
-  // USE THIS METHOD IN CLOUD RESTORE
+  // TODO -> USE THIS METHOD IN CLOUD RESTORE
   @override
   String doDecryption({String? key, Barcode? res}) {
     final myKey = fetchKey(key: key);

@@ -1,4 +1,4 @@
-import 'package:cryptoX/app_theme/theme.dart';
+import 'package:cryptoX/app_utilities/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 

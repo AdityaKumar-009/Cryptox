@@ -4,11 +4,11 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lottie/lottie.dart';
 import '../my_dashboard_page.dart';
 import '../creation_restoration_pages/generate_seed_words.dart';
-import '../app_theme/theme.dart';
+import 'package:cryptoX/app_utilities/theme.dart';
 import '../creation_restoration_pages/confirm_or_restore.dart';
 
 // FETCHING CRX AMOUNT BALANCE FROM ETHEREUM NETWORK
-double crxBalance = 100.00;
+double crxBalance = 99.99;
 
 // ============================= FIRST PAGE ======================================|
 
@@ -96,11 +96,15 @@ class _BalanceState extends State<Balance> {
                       child: Container(
                         width: 275,
                         height: 220,
-                        decoration: const BoxDecoration(
+                        decoration: BoxDecoration(
                           boxShadow: [
                             BoxShadow(
-                                color: Color(0xffc2c2c2),
-                                offset: Offset(0, 20),
+                                color:
+                                    (MediaQuery.platformBrightnessOf(context) ==
+                                            Brightness.dark)
+                                        ? const Color(0xFF333333)
+                                        : const Color(0xffc2c2c2), // DARK THEME
+                                offset: const Offset(0, 20),
                                 blurRadius: 20,
                                 spreadRadius: 0),
                           ],
@@ -113,7 +117,16 @@ class _BalanceState extends State<Balance> {
                       height: 220,
                       decoration: BoxDecoration(
                           gradient: LinearGradient(
-                            colors: [const Color(0xff1f1f1f), primaryColor()],
+                            colors: (MediaQuery.platformBrightnessOf(context) ==
+                                    Brightness.light)
+                                ? [
+                                    const Color(0xff1f1f1f),
+                                    const Color(0xff1b1b1b)
+                                  ]
+                                : [
+                                    const Color(0xff414141),
+                                    const Color(0xff2a2a2a)
+                                  ],
                             begin: const Alignment(0.5, 0.0),
                             end: const Alignment(0.5, 1.0),
                           ),
@@ -146,7 +159,7 @@ class _BalanceState extends State<Balance> {
                             top: 50,
                             left: 30,
                             child: Text(
-                              '₹ ${crxBalance * 100}',
+                              '₹ ${(crxBalance * 100).toStringAsFixed(2)}',
                               style: const TextStyle(
                                   fontFamily: 'Space',
                                   fontSize: 35,
@@ -176,8 +189,8 @@ class _BalanceState extends State<Balance> {
                                   ),
                                 ),
                                 text(
-                                  crxBalance.toString(),
-                                  color: Colors.white,
+                                  crxBalance.toStringAsFixed(2),
+                                  color: lightTheme(),
                                   fontSize: 15,
                                   fontWeight: FontWeight.w600,
                                 )
@@ -252,11 +265,16 @@ class _BalanceState extends State<Balance> {
                       child: Container(
                         width: 275,
                         height: 190,
-                        decoration: const BoxDecoration(
+                        decoration: BoxDecoration(
                           boxShadow: [
                             BoxShadow(
-                                color: Color(0xffc2c2c2),
-                                offset: Offset(0, 20),
+                                color: (MediaQuery.of(context)
+                                            .platformBrightness ==
+                                        Brightness.dark)
+                                    ? const Color(0xFF333333)
+                                    : const Color(0xffc2c2c2), // for dark theme
+                                // color: Color(0xffc2c2c2), // for light theme
+                                offset: const Offset(0, 20),
                                 blurRadius: 20,
                                 spreadRadius: 0),
                           ],
@@ -322,10 +340,10 @@ class _BalanceState extends State<Balance> {
                                   child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceEvenly,
-                                    children: [
+                                    children: const [
                                       Icon(
                                         FontAwesomeIcons.circlePlus,
-                                        color: primaryColor(),
+                                        color: Color(0xff1b1b1b),
                                         size: 18,
                                       ),
                                       Text(
@@ -334,7 +352,7 @@ class _BalanceState extends State<Balance> {
                                           fontFamily: 'Space',
                                           fontWeight: FontWeight.w600,
                                           fontSize: 18,
-                                          color: primaryColor(),
+                                          color: Color(0xff1b1b1b),
                                         ),
                                       ),
                                     ],
@@ -437,7 +455,11 @@ class _RecentTransactionState extends State<RecentTransaction> {
             children: [
               text(
                 'Recent Transaction',
-                color: primaryColor(),
+                color: (MediaQuery.platformBrightnessOf(context) ==
+                        Brightness.light)
+                    ? Colors.black
+                    : accentColor(),
+                fontSize: 20,
                 fontWeight: FontWeight.w900,
               ),
               InkWell(
@@ -468,6 +490,7 @@ class _RecentTransactionState extends State<RecentTransaction> {
             physics: const BouncingScrollPhysics(),
             itemBuilder: (context, index) {
               return shadowBox(
+                context: context,
                 margin: const EdgeInsets.only(top: 10, bottom: 10),
                 padding: const EdgeInsets.fromLTRB(0, 12, 0, 13),
                 // CONTAINS PEOPLE NAME, TIME, PAYMENT RECEIVED / SENT TRANSACTION AMOUNT
@@ -479,7 +502,7 @@ class _RecentTransactionState extends State<RecentTransaction> {
                               'Payment Page is Opening for ${names[index]}'))),
 
                   // USER PROFILE PHOTO
-                  leading: circularProfile(),
+                  leading: circularProfile(context: context),
                   // USER NAME
                   title: text(
                     names[index],
@@ -490,23 +513,23 @@ class _RecentTransactionState extends State<RecentTransaction> {
                   subtitle: text(
                     '12:00 AM - Payment Received',
                     color: complementColor(),
-                    fontSize: 11,
-                    fontWeight: FontWeight.w600,
+                    fontSize: 10,
+                    fontWeight: FontWeight.w800,
                   ),
                   trailing: FittedBox(
                     fit: BoxFit.contain,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        const Icon(
+                        Icon(
                           FontAwesomeIcons.plus,
-                          color: Color(0xe60fb022),
+                          color: green(),
                           size: 12,
                         ),
                         text(
                           ' ₹ 100',
                           fontWeight: FontWeight.w600,
-                          color: Color(0xe60fb022),
+                          color: green(),
                           fontSize: 15,
                         )
                       ],

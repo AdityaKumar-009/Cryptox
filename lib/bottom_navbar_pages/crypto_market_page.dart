@@ -1,4 +1,4 @@
-import 'package:cryptoX/app_theme/theme.dart';
+import 'package:cryptoX/app_utilities/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
@@ -26,7 +26,8 @@ class _SecondPageState extends State<SecondPage> {
                 frameRate: FrameRate.max,
                 width: 350),
             text('Fetching Current Prices...',
-                color: complementColor(), fontSize: 14),
+                // color: complementColor(),
+                fontSize: 14),
           ],
         ),
 

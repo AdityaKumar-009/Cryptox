@@ -3,7 +3,8 @@ import 'package:cryptoX/creation_restoration_pages/key_generation_or_restore.dar
 import 'package:cryptoX/scanner_page.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import '../app_theme/theme.dart';
+import 'package:lottie/lottie.dart';
+import '../app_utilities/theme.dart';
 import 'cloud_export_import_private_key.dart';
 
 class ConfirmSeed extends StatefulWidget {
@@ -45,8 +46,6 @@ class _ConfirmSeedState extends State<ConfirmSeed> {
 
   List<TextEditingController> input = [];
 
-  Color textColor = Colors.blueGrey;
-
   bool textFieldEnabled = true;
 
   @override
@@ -83,25 +82,24 @@ class _ConfirmSeedState extends State<ConfirmSeed> {
     return Scaffold(
       //
 
-      backgroundColor: lightGrey(),
+      // backgroundColor: lightGrey(),
 
       //
 
       appBar: titledAppBar(
+          context: context,
           title: (widget.page == 'create') ? 'Create Wallet' : 'Restore Wallet',
           putLeading: true,
           leadingContent: IconButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              icon: Icon(
-                FontAwesomeIcons.angleLeft,
-                color: primaryColor(),
-              ))),
+              icon: const Icon(FontAwesomeIcons.angleLeft))),
 
       //
 
       bottomNavigationBar: bottomBar(
+        context: context,
         content: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -109,7 +107,10 @@ class _ConfirmSeedState extends State<ConfirmSeed> {
                 width: (widget.page == 'create') ? 175 : 80,
                 height: 50,
                 child: button(
-                  color: primaryColor(),
+                  color: (MediaQuery.platformBrightnessOf(context) ==
+                          Brightness.light)
+                      ? primaryColor()
+                      : const Color(0xff484848),
                   content: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -117,7 +118,7 @@ class _ConfirmSeedState extends State<ConfirmSeed> {
                           color: lightTheme(),
                           fontSize: 15,
                           fontWeight: FontWeight.w600),
-                      const Icon(Icons.qr_code_scanner_rounded),
+                      Icon(Icons.qr_code_scanner_rounded, color: lightTheme()),
                     ],
                   ),
                   onPressed: () async {
@@ -146,7 +147,7 @@ class _ConfirmSeedState extends State<ConfirmSeed> {
                         for (int i = 0; i < 12; i++) {
                           input[i].text = '';
                         }
-                        if (widget.page == 'restore') {
+                        if (widget.privateAddress != null) {
                           textFieldEnabled = false;
                         }
                         print(
@@ -160,7 +161,8 @@ class _ConfirmSeedState extends State<ConfirmSeed> {
                         widget.twelveWordsFromQR = res;
                         for (int i = 0; i < 12; i++) {
                           input[i].text = widget.twelveWordsFromQR[i];
-                          if (widget.page == 'restore') {
+                          if (widget.privateAddress != null ||
+                              input[i].text != '') {
                             ++count;
                             textFieldEnabled = false;
                           }
@@ -184,7 +186,7 @@ class _ConfirmSeedState extends State<ConfirmSeed> {
                     width: 105,
                     height: 50,
                     child: button(
-                      color: accentColor(),
+                      // color: accentColor(),
                       content: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
@@ -220,7 +222,6 @@ class _ConfirmSeedState extends State<ConfirmSeed> {
                 width: (widget.page == 'create') ? 175 : 80,
                 height: 50,
                 child: button(
-                  color: primaryColor(),
                   onPressed: ((count == 12 || widget.privateAddress != null) ||
                           count2 == 12) //---------------------------
                       ? () {
@@ -264,15 +265,15 @@ class _ConfirmSeedState extends State<ConfirmSeed> {
                   content: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      text((widget.page == 'create') ? 'Generate Keys' : 'OK',
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                          color: lightTheme()),
+                      text(
+                        (widget.page == 'create') ? 'Generate Keys' : 'OK',
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                      ),
                       Icon(
                         (widget.page == 'create')
                             ? FontAwesomeIcons.key
                             : FontAwesomeIcons.angleRight,
-                        color: lightTheme(),
                       ),
                     ],
                   ),
@@ -316,7 +317,10 @@ class _ConfirmSeedState extends State<ConfirmSeed> {
                                 TextSpan(
                                   text: 'Type to confirm your words that you ',
                                   style: TextStyle(
-                                      fontSize: 15, color: primaryColor()),
+                                      fontSize: 15,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .inverseSurface),
                                 ),
                                 TextSpan(
                                   text: 'remembered',
@@ -325,7 +329,10 @@ class _ConfirmSeedState extends State<ConfirmSeed> {
                                 TextSpan(
                                   text: ' earlier.',
                                   style: TextStyle(
-                                      fontSize: 15, color: primaryColor()),
+                                      fontSize: 15,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .inverseSurface),
                                 ),
                               ]),
                         ),
@@ -363,41 +370,54 @@ class _ConfirmSeedState extends State<ConfirmSeed> {
                                   itemBuilder: (context, index) {
                                     return Container(
                                       child: (flagList[index] == 1 ||
+                                              widget.privateAddress != null ||
                                               (widget.wordFetched == true &&
                                                   widget.twelveWordsFromQR[
                                                           index] ==
-                                                      widget.twelveWords[
-                                                          index]) ||
-                                              widget.privateAddress != null)
+                                                      widget
+                                                          .twelveWords[index]))
                                           //if flagList which has previously contained 0 as an element
                                           //by calling the setState() flagList at that index becomes 1
                                           ? Container(
                                               decoration: BoxDecoration(
                                                 borderRadius:
                                                     BorderRadius.circular(8),
-                                                color: lightTheme(),
-                                                boxShadow: const [
+                                                color: (MediaQuery.of(context)
+                                                            .platformBrightness ==
+                                                        Brightness.light)
+                                                    ? Colors.white
+                                                    : Colors.black26,
+                                                boxShadow: [
                                                   BoxShadow(
-                                                    color: Color(0xffe8e8e8),
+                                                    color: (MediaQuery.of(
+                                                                    context)
+                                                                .platformBrightness ==
+                                                            Brightness.light)
+                                                        ? const Color(
+                                                            0xffe8e8e8)
+                                                        : Colors.transparent,
                                                     blurRadius: 40,
                                                   )
                                                 ],
                                               ),
-                                              child: const Icon(
-                                                FontAwesomeIcons.check,
-                                                color: Colors.green,
-                                              ),
-                                            )
+                                              child: Lottie.asset(
+                                                  'assets/anim/Verified.json',
+                                                  repeat: false,
+                                                  frameRate: FrameRate.max))
                                           : Container(
                                               decoration: BoxDecoration(
                                                 borderRadius:
                                                     BorderRadius.circular(8),
-                                                color: Colors.white,
-                                                boxShadow: const [
+                                                boxShadow: [
                                                   BoxShadow(
-                                                    color: Color(0xffe8e8e8),
+                                                    color: (MediaQuery.of(
+                                                                    context)
+                                                                .platformBrightness ==
+                                                            Brightness.light)
+                                                        ? const Color(
+                                                            0xffe8e8e8)
+                                                        : Colors.transparent,
                                                     blurRadius: 40,
-                                                    // spreadRadius: 5
                                                   )
                                                 ],
                                               ),
@@ -414,7 +434,7 @@ class _ConfirmSeedState extends State<ConfirmSeed> {
                                                   color:
                                                       (widget.page == 'create')
                                                           ? red()
-                                                          : textColor,
+                                                          : accentColor(),
                                                 ),
                                                 onChanged: (txt) {
                                                   if (txt ==
@@ -433,18 +453,20 @@ class _ConfirmSeedState extends State<ConfirmSeed> {
                                                   }
                                                 },
                                                 onSubmitted: (txt) {
-                                                  count2 = 0;
-                                                  for (int i = 0; i < 12; i++) {
-                                                    if (input[i].text != '') {
-                                                      count2 = count2! + 1;
+                                                  if (widget.page ==
+                                                      'restore') {
+                                                    count2 = 0;
+                                                    for (int i = 0;
+                                                        i < 12;
+                                                        i++) {
+                                                      if (input[i].text != '') {
+                                                        count2 = count2! + 1;
+                                                      }
                                                     }
                                                   }
                                                 },
                                                 textAlign: TextAlign.center,
-                                                cursorColor: (widget.page ==
-                                                        'create')
-                                                    ? const Color(0xffd5a930)
-                                                    : Colors.blueGrey,
+                                                cursorColor: accentColor(),
                                                 decoration: InputDecoration(
                                                   contentPadding:
                                                       const EdgeInsets.fromLTRB(
@@ -452,11 +474,7 @@ class _ConfirmSeedState extends State<ConfirmSeed> {
                                                   labelText: '${index + 1}. ',
                                                   labelStyle: TextStyle(
                                                     wordSpacing: 0,
-                                                    color: (widget.page ==
-                                                            'create')
-                                                        ? const Color(
-                                                            0xffd5a930)
-                                                        : Colors.blueGrey,
+                                                    color: accentColor(),
                                                   ),
                                                   disabledBorder:
                                                       const OutlineInputBorder(
@@ -473,18 +491,21 @@ class _ConfirmSeedState extends State<ConfirmSeed> {
                                                     borderSide: BorderSide.none,
                                                   ),
                                                   filled: true,
-                                                  fillColor: lightTheme(),
+                                                  fillColor: (MediaQuery.of(
+                                                                  context)
+                                                              .platformBrightness ==
+                                                          Brightness.light)
+                                                      ? Colors.white
+                                                      : const Color(0xff484848),
+                                                  // DARK THEME
+                                                  // fillColor: lightTheme(), // LIGHT THEME
                                                   focusedBorder:
                                                       OutlineInputBorder(
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             8),
                                                     borderSide: BorderSide(
-                                                      color: (widget.page ==
-                                                              'create')
-                                                          ? const Color(
-                                                              0xffd5a930)
-                                                          : Colors.blueGrey,
+                                                      color: accentColor(),
                                                       width: 2,
                                                     ),
                                                   ),
@@ -513,22 +534,13 @@ class _ConfirmSeedState extends State<ConfirmSeed> {
                               margin: const EdgeInsets.only(top: 30),
                             ),
                             const Divider(),
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
-                                color: Colors.white,
-                                boxShadow: const [
-                                  BoxShadow(
-                                    color: Color(0xffe8e8e8),
-                                    blurRadius: 40,
-                                    // spreadRadius: 5
-                                  )
-                                ],
-                              ),
+                            shadowBox(
+                              context: context,
                               margin: const EdgeInsets.only(
                                   top: 30, left: 20, right: 20, bottom: 10),
                               padding: const EdgeInsets.all(10),
-                              child: SizedBox(
+                              content: Container(
+                                color: Theme.of(context).cardColor,
                                 height: 80,
                                 child: Column(
                                   mainAxisAlignment:

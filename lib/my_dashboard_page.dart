@@ -25,7 +25,7 @@ import 'package:lottie/lottie.dart';
 // PACKAGE FOR LOCAL STORAGE
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'app_theme/theme.dart';
+import 'package:cryptoX/app_utilities/theme.dart';
 
 // LIST FOR STORING NAMES WHO YOU MADE TRANSACTION RECENTLY
 List<String> names = [
@@ -71,6 +71,7 @@ ImageProvider userImage = const AssetImage('assets/images/Adit.jpg');
 int currentIndex = 0;
 
 //
+String? myAddress; // MY PUBLIC ADDRESS
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({super.key});
@@ -86,8 +87,6 @@ class MyHomePageState extends State<MyHomePage>
     with SingleTickerProviderStateMixin {
   // FLAG TO STORE TRUE IF WALLET CREATED
   bool isWalletCreatedFlag = false;
-
-  String? myAddress;
 
   static const String isCreated = 'isWalletCreated';
   static const String publicAddress = 'PublicKey';
@@ -123,11 +122,12 @@ class MyHomePageState extends State<MyHomePage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: lightTheme(),
+      // backgroundColor: lightTheme(),
 
       //----------------------------------- APP BAR FOR MAIN DASHBOARD ---------------------------------------
 
       appBar: appBar(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         elevation: 0,
         content: SizedBox(
           child: Row(
@@ -140,16 +140,21 @@ class MyHomePageState extends State<MyHomePage>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     text('Welcome',
-                        color: complementColor(),
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600),
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: complementColor()),
                     text(userName,
-                        color: primaryColor(), fontWeight: FontWeight.w600),
+                        color: (MediaQuery.platformBrightnessOf(context) ==
+                                Brightness.light)
+                            ? Colors.black
+                            : accentColor(),
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600),
                   ],
                 ),
               ),
               Container(
-                color: lightTheme(),
+                color: Theme.of(context).scaffoldBackgroundColor,
                 margin: const EdgeInsets.only(top: 30, bottom: 15, right: 10),
                 child: InkWell(
                   onTap: () {
@@ -158,7 +163,7 @@ class MyHomePageState extends State<MyHomePage>
                   },
                   child: Hero(
                     tag: 'profile',
-                    child: circularProfile(image: userImage),
+                    child: circularProfile(image: userImage, context: context),
                   ),
                 ),
               ),
@@ -177,11 +182,16 @@ class MyHomePageState extends State<MyHomePage>
           tooltip: 'Scan to Pay',
           // splashColor: Colors.blue,
           // elevation: 0,
-          // backgroundColor: Colors.white,
-          backgroundColor: (isWalletCreatedFlag == false)
-              ? const Color(0xffc9a408)
-              : accentColor2(), // USED THIS ACCENT COLOR WHEN WALLET CREATED
+          // backgroundColor: Color(0xff4d4d4d),
+          backgroundColor: (isWalletCreatedFlag == false) // LIGHT THEME
+              ? ((MediaQuery.of(context).platformBrightness == Brightness.light)
+                  ? const Color(0xffc9a408)
+                  : complementColor())
+              : ((MediaQuery.of(context).platformBrightness == Brightness.light)
+                  ? accentColor2() // USED THIS ACCENT COLOR WHEN WALLET CREATED
+                  : complementColor()),
           // backgroundColor: accentColor(),
+
           onPressed: () {
             Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => Scan2Pay(
@@ -200,17 +210,51 @@ class MyHomePageState extends State<MyHomePage>
       bottomNavigationBar: Container(
         height: 85,
         padding: const EdgeInsets.only(bottom: 15, right: 15, left: 15),
-        color: lightTheme(),
+        color: Theme.of(context).scaffoldBackgroundColor,
         child: BottomBarCreative(
-          highlightStyle:
-              HighlightStyle(background: primaryColor(), color: primaryColor()),
+          // highlightStyle: const HighlightStyle(
+          //     background: Color(0xff1b1b1b), color: Color(0xff1b1b1b)), // FOR LIGHT THEME
+          highlightStyle: HighlightStyle(
+              background: (isWalletCreatedFlag == false)
+                  ? ((MediaQuery.of(context).platformBrightness ==
+                          Brightness.light)
+                      ? primaryColor()
+                      : const Color(0xffc9a408))
+                  : ((MediaQuery.of(context).platformBrightness ==
+                          Brightness.light)
+                      ? primaryColor()
+                      : const Color(0xffEECB6B)),
+              color: (isWalletCreatedFlag == false)
+                  ? ((MediaQuery.of(context).platformBrightness ==
+                          Brightness.light)
+                      ? primaryColor()
+                      : const Color(0xffc9a408))
+                  : ((MediaQuery.of(context).platformBrightness ==
+                          Brightness.light)
+                      ? primaryColor()
+                      : const Color(0xffEECB6B))),
           borderRadius: BorderRadius.circular(16),
           items: navItems,
-          backgroundColor: primaryColor(),
-          color: const Color(0xff6a767c),
-          colorSelected: (isWalletCreatedFlag == false)
-              ? const Color(0xffc9a408)
-              : const Color(0xffEECB6B),
+          // backgroundColor: const Color(0xff1b1b1b), // FOR LIGHT THEME
+          backgroundColor: (isWalletCreatedFlag == false)
+              ? ((MediaQuery.of(context).platformBrightness == Brightness.light)
+                  ? primaryColor()
+                  : const Color(0xffc9a408))
+              : ((MediaQuery.of(context).platformBrightness == Brightness.light)
+                  ? primaryColor()
+                  : const Color(0xffEECB6B)),
+          // color: const Color(0xff6a767c), // LIGHT THEME
+          color: (MediaQuery.of(context).platformBrightness == Brightness.light)
+              ? const Color(0xff6a767c)
+              : const Color(0x881b1b1b),
+          colorSelected: (isWalletCreatedFlag == false) // LIGHT THEME
+              ? ((MediaQuery.of(context).platformBrightness == Brightness.dark)
+                  ? primaryColor()
+                  : const Color(0xffc9a408))
+              : ((MediaQuery.of(context).platformBrightness == Brightness.dark)
+                  ? primaryColor()
+                  : const Color(0xffEECB6B)),
+          // colorSelected: const Color(0xff1b1b1b),
           indexSelected: currentIndex,
           onTap: (newIndex) => setState(() {
             if (newIndex > 1 && newIndex < 4) {
