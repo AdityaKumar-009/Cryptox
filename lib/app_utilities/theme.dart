@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class MyTheme {
@@ -217,6 +218,7 @@ Widget shadowBox({
   EdgeInsetsGeometry padding = EdgeInsets.zero,
   required BuildContext context,
   Color? shadowColor,
+  Color? backgroundColor,
   // Color shadowColor = const Color(0xff333333),
 }) {
   return Container(
@@ -224,7 +226,9 @@ Widget shadowBox({
     margin: margin,
     decoration: BoxDecoration(
       borderRadius: round_16(),
-      color: Theme.of(context).cardColor,
+      color: (backgroundColor == null)
+          ? Theme.of(context).cardColor
+          : backgroundColor,
       boxShadow: [
         BoxShadow(
           color: (shadowColor == null)
@@ -256,6 +260,10 @@ Widget inputField({
   Color? shadowColor,
   Color? backgroundColor,
   Color? textColor,
+  TextInputType keyboardType = TextInputType.text,
+  bool autofocus = false,
+  Widget? prefix,
+  List<TextInputFormatter>? inputFormatters,
 }) {
   return Stack(
     clipBehavior: Clip.none,
@@ -265,6 +273,7 @@ Widget inputField({
         left: 0,
         right: 0,
         child: shadowBox(
+            backgroundColor: backgroundColor,
             context: context,
             shadowColor: (shadowColor == null)
                 ? (MediaQuery.platformBrightnessOf(context) == Brightness.light)
@@ -276,19 +285,22 @@ Widget inputField({
             )),
       ),
       TextField(
+          inputFormatters: inputFormatters,
+          autofocus: autofocus,
           autocorrect: false,
           cursorColor: accentColor(),
           maxLength: maxLength,
+          keyboardType: keyboardType,
           decoration: InputDecoration(
+            // prefixText: '₹',
+            prefix: prefix,
             fillColor: (backgroundColor == null)
                 ? Theme.of(context).cardColor
                 : backgroundColor,
             filled: true,
             hintText: hintText,
             hintStyle: TextStyle(
-              color: (textColor == null)
-                  ? Theme.of(context).colorScheme.inverseSurface
-                  : textColor,
+              color: (textColor == null) ? const Color(0xFF969494) : textColor,
             ),
             helperStyle: TextStyle(
                 fontSize: 10,

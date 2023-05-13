@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
+import 'package:cryptoX/make_transaction.dart';
 import 'package:cryptoX/private/aes_encryption_decryption.dart';
 import 'package:cryptoX/profile_page.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -8,6 +9,7 @@ import 'package:lottie/lottie.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:cryptoX/app_utilities/theme.dart';
+import 'package:web3dart/credentials.dart';
 
 class Scan2Pay extends StatefulWidget {
   String? modeOfScanning;
@@ -35,6 +37,7 @@ class _Scan2PayState extends State<Scan2Pay>
   bool isOff = false;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   String txt = 'Wrong Password';
+  TextEditingController manualAddress = TextEditingController();
 
   late final AnimationController _animcontroller = AnimationController(
     vsync: this,
@@ -207,20 +210,20 @@ class _Scan2PayState extends State<Scan2Pay>
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
-                          if (result != null)
-                            Text(
-                                // 'Barcode Type: ${describeEnum(result!.format)}   ' // TO SHOW BARCODE TYPE
-                                'Other\'s Address: ${result!.code}') //Using Not symbol [ ! ] after variable means it will not be null.
-                          else
-                            Text(
-                              'Enter Address',
-                              style: TextStyle(
-                                color: accentColor(),
-                                fontSize: 22,
-                                fontFamily: 'Space',
-                                fontWeight: FontWeight.w600,
-                              ),
+                          // if (result != null)
+                          //   Text(
+                          //       // 'Barcode Type: ${describeEnum(result!.format)}   ' // TO SHOW BARCODE TYPE
+                          //       'Other\'s Address: ${result!.code}') //Using Not symbol [ ! ] after variable means it will not be null.
+                          // else
+                          Text(
+                            'Enter Address',
+                            style: TextStyle(
+                              color: accentColor(),
+                              fontSize: 22,
+                              fontFamily: 'Space',
+                              fontWeight: FontWeight.w600,
                             ),
+                          ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -235,6 +238,7 @@ class _Scan2PayState extends State<Scan2Pay>
                                 flex: 20,
                                 child: inputField(
                                     context: context,
+                                    controller: manualAddress,
                                     textColor: primaryColor(),
                                     backgroundColor: lightTheme(),
                                     hintText:
@@ -260,15 +264,109 @@ class _Scan2PayState extends State<Scan2Pay>
                                   padding: const EdgeInsets.only(bottom: 18),
                                   child: IconButton(
                                     padding: EdgeInsets.zero,
-                                    onPressed: () async {
-                                      await controller?.pauseCamera();
-                                      setState(() {
-                                        isOff = true;
-                                      });
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(const SnackBar(
-                                              content: Text(
-                                                  'OPENING: Paying Using Manual Address!')));
+                                    onPressed: () {
+                                      // controller?.pauseCamera();
+                                      // setState(() {
+                                      //   isOff = true;
+                                      // });
+
+                                      EthereumAddress publicAddress;
+                                      try {
+                                        publicAddress = EthereumAddress.fromHex(
+                                            manualAddress.text);
+
+                                        // TODO - REMOVE THIS SNACK BAR!
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(SnackBar(
+                                          backgroundColor:
+                                              Colors.green.shade800,
+                                          behavior: SnackBarBehavior.floating,
+                                          content: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child: Icon(
+                                                      Icons
+                                                          .check_circle_rounded,
+                                                      color: lightTheme(),
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    child: Text(
+                                                      'CORRECT ADDRESS',
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: TextStyle(
+                                                          color: lightTheme(),
+                                                          fontFamily: 'Space',
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          fontSize: 18),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ));
+
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    TransactionPage(
+                                                      pubAddress: publicAddress,
+                                                    )));
+                                      } catch (e) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(SnackBar(
+                                          backgroundColor: Colors.red.shade800,
+                                          behavior: SnackBarBehavior.floating,
+                                          content: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child: Icon(
+                                                      Icons.error,
+                                                      color: lightTheme(),
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    'ENTER VALID ADDRESS!',
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                        color: lightTheme(),
+                                                        fontFamily: 'Space',
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        fontSize: 18),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ));
+                                      }
                                     },
                                     icon: Icon(
                                       FontAwesomeIcons.arrowRight,
@@ -289,7 +387,7 @@ class _Scan2PayState extends State<Scan2Pay>
                       ),
                     ),
                   )
-                : const SizedBox(width: 0)
+                : const SizedBox(),
           ],
         ),
       ),
@@ -329,8 +427,91 @@ class _Scan2PayState extends State<Scan2Pay>
             scanData; // scanData is data fetched from QR has two values: code -> string, format -> describe it is QR or Barcode
         widget.popupCount++;
         // if scanner is accessed from other pages not from home screen [normal scan to pay] then invoke decryption
-        if (result!.code != null && widget.modeOfScanning != 'scanAddress') {
-          decryptor(result, controller);
+        if (result!.code != null) {
+          if (widget.modeOfScanning != 'scanAddress') {
+            decryptor(result, controller);
+          } else {
+            // verifying PUBLIC ADDRESS
+            try {
+              EthereumAddress userAddress =
+                  EthereumAddress.fromHex(result!.code!);
+              manualAddress.text = userAddress.toString();
+
+              // TODO - REMOVE THIS SNACK BAR!
+
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                backgroundColor: Colors.green.shade800,
+                behavior: SnackBarBehavior.floating,
+                content: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Icon(
+                            Icons.check_circle_rounded,
+                            color: lightTheme(),
+                          ),
+                        ),
+                        SizedBox(
+                          child: Text(
+                            'CORRECT QR',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                color: lightTheme(),
+                                fontFamily: 'Space',
+                                fontWeight: FontWeight.w600,
+                                fontSize: 18),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ));
+
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          TransactionPage(pubAddress: userAddress)));
+            } catch (e) {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                backgroundColor: Colors.red.shade800,
+                behavior: SnackBarBehavior.floating,
+                content: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Icon(
+                            Icons.error,
+                            color: lightTheme(),
+                          ),
+                        ),
+                        Text(
+                          'INVALID QR!',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              color: lightTheme(),
+                              fontFamily: 'Space',
+                              fontWeight: FontWeight.w600,
+                              fontSize: 18),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ));
+            }
+          }
         }
       });
     });
@@ -343,7 +524,7 @@ class _Scan2PayState extends State<Scan2Pay>
       BuildContext context, QRViewController qrController, bool permission) {
     log('${DateTime.now().toIso8601String()}_onPermissionSet $permission');
     if (!permission) {
-      // if camera permission not given by the user show snackbar
+      // if camera permission not given by the user show snack bar
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         showCloseIcon: true,
         backgroundColor: Colors.red.shade700,
@@ -405,7 +586,7 @@ class _Scan2PayState extends State<Scan2Pay>
       String customKey = '';
       print(e);
 
-      // !! USE THIS ALERT IN CLOUD RESTORE AS WELL FOR ENTERING PASSWORD FOR PRIVATE KEY ENCRYPTED USING CUSTOM PASSWORD
+      // TODO -> !! USE THIS ALERT IN CLOUD RESTORE AS WELL FOR ENTERING PASSWORD FOR PRIVATE KEY ENCRYPTED USING CUSTOM PASSWORD
       // ------------------- ALERT --------------------|
       var alertStyle = AlertStyle(
         animationType: AnimationType.grow,
