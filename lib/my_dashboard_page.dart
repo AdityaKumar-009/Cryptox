@@ -180,9 +180,6 @@ class MyHomePageState extends State<MyHomePage>
         width: 77,
         child: FloatingActionButton(
           tooltip: 'Scan to Pay',
-          // splashColor: Colors.blue,
-          // elevation: 0,
-          // backgroundColor: Color(0xff4d4d4d),
           backgroundColor: (isWalletCreatedFlag == false) // LIGHT THEME
               ? ((MediaQuery.of(context).platformBrightness == Brightness.light)
                   ? const Color(0xffc9a408)
@@ -190,13 +187,46 @@ class MyHomePageState extends State<MyHomePage>
               : ((MediaQuery.of(context).platformBrightness == Brightness.light)
                   ? accentColor2() // USED THIS ACCENT COLOR WHEN WALLET CREATED
                   : complementColor()),
-          // backgroundColor: accentColor(),
 
           onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => Scan2Pay(
-                  scannerMode: 'scanAddress'), //NORMAL SCAN TO PAY MODE
-            ));
+            if (isWalletCreatedFlag == true) {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => Scan2Pay(
+                    scannerMode: 'scanAddress'), //NORMAL SCAN TO PAY MODE
+              ));
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                backgroundColor: Colors.red.shade800,
+                behavior: SnackBarBehavior.floating,
+                content: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Icon(
+                            Icons.error,
+                            color: lightTheme(),
+                          ),
+                        ),
+                        Text(
+                          'Create a wallet first!',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              color: lightTheme(),
+                              fontFamily: 'Space',
+                              fontWeight: FontWeight.w600,
+                              fontSize: 18),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ));
+            }
           },
           child: Lottie.asset('assets/anim/qrScanner.json',
               frameRate: FrameRate.max,
@@ -212,8 +242,6 @@ class MyHomePageState extends State<MyHomePage>
         padding: const EdgeInsets.only(bottom: 15, right: 15, left: 15),
         color: Theme.of(context).scaffoldBackgroundColor,
         child: BottomBarCreative(
-          // highlightStyle: const HighlightStyle(
-          //     background: Color(0xff1b1b1b), color: Color(0xff1b1b1b)), // FOR LIGHT THEME
           highlightStyle: HighlightStyle(
               background: (isWalletCreatedFlag == false)
                   ? ((MediaQuery.of(context).platformBrightness ==
@@ -235,7 +263,6 @@ class MyHomePageState extends State<MyHomePage>
                       : const Color(0xffEECB6B))),
           borderRadius: BorderRadius.circular(16),
           items: navItems,
-          // backgroundColor: const Color(0xff1b1b1b), // FOR LIGHT THEME
           backgroundColor: (isWalletCreatedFlag == false)
               ? ((MediaQuery.of(context).platformBrightness == Brightness.light)
                   ? primaryColor()
@@ -254,7 +281,6 @@ class MyHomePageState extends State<MyHomePage>
               : ((MediaQuery.of(context).platformBrightness == Brightness.dark)
                   ? primaryColor()
                   : const Color(0xffEECB6B)),
-          // colorSelected: const Color(0xff1b1b1b),
           indexSelected: currentIndex,
           onTap: (newIndex) => setState(() {
             if (newIndex > 1 && newIndex < 4) {

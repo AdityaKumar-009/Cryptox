@@ -265,11 +265,6 @@ class _Scan2PayState extends State<Scan2Pay>
                                   child: IconButton(
                                     padding: EdgeInsets.zero,
                                     onPressed: () {
-                                      // controller?.pauseCamera();
-                                      // setState(() {
-                                      //   isOff = true;
-                                      // });
-
                                       EthereumAddress publicAddress;
                                       try {
                                         publicAddress = EthereumAddress.fromHex(
@@ -320,6 +315,10 @@ class _Scan2PayState extends State<Scan2Pay>
                                           ),
                                         ));
 
+                                        controller?.pauseCamera();
+                                        setState(() {
+                                          isOff = true;
+                                        });
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(
@@ -472,7 +471,10 @@ class _Scan2PayState extends State<Scan2Pay>
                   ],
                 ),
               ));
-
+              controller.pauseCamera();
+              setState(() {
+                isOff = true;
+              });
               Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
