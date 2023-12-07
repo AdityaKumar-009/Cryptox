@@ -3,6 +3,22 @@
 CryptoX is a Flutter-based cryptocurrency wallet app that offers a secure and intuitive platform for providing features that existing apps like MetaMask, coinbase etc. doesn't provide.
 
 ---
+## User Interface
+<img src="https://github.com/AdityaKumar-009/Cryptox/assets/108915964/be059491-2c9a-440e-9442-aa7f6145b18c" height="600" />
+<img src="https://github.com/AdityaKumar-009/Cryptox/assets/108915964/aeeff90c-d8ad-4cd3-b19b-3d07b6880ade" height="600" />
+<img src="https://github.com/AdityaKumar-009/Cryptox/assets/108915964/f9fcf348-4ff8-4127-a8c3-6f504069741f" height="600" />
+
+<img src="https://github.com/AdityaKumar-009/Cryptox/assets/108915964/cd53ee6a-5b79-4685-8404-6edb3b96793e" height="600" />
+<img src="https://github.com/AdityaKumar-009/Cryptox/assets/108915964/9bacccd6-ba4e-4fe4-bbe4-626ade8afdc7" height="600" />
+<img src="https://github.com/AdityaKumar-009/Cryptox/assets/108915964/7e0e5243-6e25-47b8-9437-6c64a6d172e4" height="600" />
+
+<img src="https://github.com/AdityaKumar-009/Cryptox/assets/108915964/6f500963-3316-4e7b-a3a1-51faf268b0f1" height="600" />
+<img src="https://github.com/AdityaKumar-009/Cryptox/assets/108915964/3f24cd54-4ed3-4a68-9608-080b5f507bdb" height="600" />
+<img src="https://github.com/AdityaKumar-009/Cryptox/assets/108915964/ed50bcf3-a89d-4a9f-b28b-0e4300da50ed" height="600" />
+
+<img src="https://github.com/AdityaKumar-009/Cryptox/assets/108915964/54a5effa-77d1-463d-80dc-28fd0db5836b" height="600" />
+<img src="https://github.com/AdityaKumar-009/Cryptox/assets/108915964/41b69d6c-2a33-4253-aa4b-7c9f5d64d70c" height="600" />
+<img src="https://github.com/AdityaKumar-009/Cryptox/assets/108915964/5586c268-66e4-4ca9-aabd-3b98f7402446" height="600" />
 
 ## Features
 
